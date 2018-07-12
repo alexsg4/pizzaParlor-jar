@@ -39,37 +39,25 @@ public class DBManager {
        return connection;
     }
 
-    //TODO implement
     public void addDBObject(DBObject toAdd) throws SQLException, ClassNotFoundException {
         if(connection == null) { establishConnection(); }
         toAdd.addToDB(connection);
     }
 
-    public void loadIngredientsFromFile(String path) throws ClassNotFoundException, SQLException {
+    public void addObjectsFrom(ArrayList<Object> arraySource) throws ClassNotFoundException, SQLException {
+        if(arraySource.isEmpty()) { return; }
 
-        try {
-            File file = new File(path);
-            Scanner fin = new Scanner(file).useDelimiter(System.getProperty("line.separator"));
-
-            while (fin.hasNextLine()) {
-
-                String lineToProcess;
-                lineToProcess = fin.nextLine();
-
-                Ingredient toAdd = Ingredient.fromString(lineToProcess);
-
-                if (toAdd != null) {
-                    addDBObject(toAdd);
+        for (Object toAdd : arraySource){
+                try {
+                    DBObject dbObject = (DBObject) toAdd;
+                    dbObject.addToDB(connection);
                 }
+                //TODO catch proper illegal conversion exception
+                catch (Exception cex){
+                    cex.printStackTrace();
             }
-
-            fin.close();
-
-        } catch (FileNotFoundException fex) {
-            fex.printStackTrace();
         }
     }
-
 }
 
 class Item implements DBObject {
@@ -100,6 +88,11 @@ class Item implements DBObject {
     @Override
     public void addToDB(Connection con) throws SQLException, ClassNotFoundException {
         return;
+    }
+
+    @Override
+    public ArrayList<Object> loadFromFile(String path) {
+        return null;
     }
 
     protected String name = "Generic Item";
@@ -173,6 +166,36 @@ class Ingredient extends Item{
                 System.out.println(sex.getMessage());
             }
         }
+    }
+
+    @Override
+    public ArrayList<Object> loadFromFile(String path) {
+
+        ArrayList<Object> ingredients = new ArrayList<>();
+
+        try {
+            File file = new File(path);
+            Scanner fin = new Scanner(file).useDelimiter(System.getProperty("line.separator"));
+
+            while (fin.hasNextLine()) {
+
+                String lineToProcess;
+                lineToProcess = fin.nextLine();
+
+                Ingredient toAdd = Ingredient.fromString(lineToProcess);
+
+                if (toAdd != null) {
+                    ingredients.add(toAdd);
+                }
+            }
+
+            fin.close();
+
+        } catch (FileNotFoundException fex) {
+            fex.printStackTrace();
+        }
+
+        return ingredients;
     }
 
     private Ingredient() {
