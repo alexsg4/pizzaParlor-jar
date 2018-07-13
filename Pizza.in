@@ -10,77 +10,77 @@
 # e. g. Pepperoni / 5, Cheese / 2, Tomato
 # translates to "5 x 10g Pepperoni, 2 x 100g Cheese, 1 x 100g Tomato" assuming baseUnits
 
+$ Spicy Pepperoni
+Sos de rosii, Mozzarella, pepperoni, jalapenos, rosii cubulete
+
 $ Florida 
-Sos de rosii, branza Mozzarella, ciuperci, sunca, ardei gras / 2, masline / 2, porumb / 3
+Sos de rosii, Mozzarella, ciuperci, sunca, ardei gras / 2, masline / 2, porumb / 3
 
 $ Europeana
-Sos de rosii, branza Mozzarella, sunca, ciuperci, cubulete cu carne de vita
+Sos de rosii, Mozzarella, sunca, ciuperci, cubulete cu carne de vita
 
 $ Pepperoni
-Sos de rosii, branza Mozzarella, pepperoni 
+Sos de rosii, Mozzarella, pepperoni 
 
 $ Nevada
-Sos de rosii, branza Mozzarella, sunca, bacon afumat, ciuperci, ardei gras, masline
+Sos de rosii, Mozzarella, sunca, bacon afumat, ciuperci, ardei gras, masline
 
 $ Vegetariana 
-Sos de rosii, branza Mozzarella, ciuperci, ardei gras, ceapa, rosii
+Sos de rosii, Mozzarella, ciuperci, ardei gras, ceapa, rosii
 
 $ California
-Sos de rosii, branza Mozzarella, carne de pui, porumb, ardei gras
+Sos de rosii, Mozzarella, carne de pui, porumb, ardei gras
 
 $ Rodeo
-Sos de rosii, branza Mozzarella, bacon afumat, ciuperci, porumb
+Sos de rosii, Mozzarella, bacon afumat, ciuperci, porumb
 
 $ Carbonara
-Sos alb cu aroma de usturoi, branza Mozzarella, bacon afumat, ciuperci, masline
+Sos alb cu aroma de usturoi,  Mozzarella, bacon afumat, ciuperci, masline
 
 $ Suprema  
-Sos de rosii, branza Mozzarella, cubulete cu carne de vita, pepperoni, ciuperci, ardei gras, ceapa
+Sos de rosii, Mozzarella, cubulete cu carne de vita, pepperoni, ciuperci, ardei gras, ceapa
 
 $ Taraneasca
-Sos de rosii, branza Mozzarella, cubulete cu carne de vita si carne de porc, ceapa, porumb
+Sos de rosii, Mozzarella, cubulete cu carne de vita si carne de porc, ceapa, porumb
 
 $ Chicken & Corn
-Sos de rosii, branza Mozzarella, piept de pui la gratar, ciuperci, masline, ardei gras, porumb, rosii
+Sos de rosii, Mozzarella, piept de pui la gratar, ciuperci, masline, ardei gras, porumb, rosii
 
 $ Ham & Bacon
-Sos de rosii, branza Mozzarella, bacon afumat, sunca, ciuperci, rosii, porumb, parmezan, busuioc
-
-$ Spicy Pepperoni
-Sos de rosii, branza Mozarella, pepperoni, jalapenos, rosii cubulete
+Sos de rosii, Mozzarella, bacon afumat, sunca, ciuperci, rosii, porumb, parmezan, busuioc
 
 $ Chicago
-Sos de rosii, branza Mozzarella, sunca, bacon afumat, pepperoni, carnati, ciuperci, ardei gras, ceapa, rosii, masline
+Sos de rosii, Mozzarella, sunca, bacon afumat, pepperoni, carnati, ciuperci, ardei gras, ceapa, rosii, masline
 
 $ Super Suprema  
-Sos de rosii, branza Mozzarella, cubulete cu carne de vita si carne de porc, pepperoni, sunca, ciuperci, ardei gras, masline, ceapa
+Sos de rosii,  Mozzarella, cubulete cu carne de vita si carne de porc, pepperoni, sunca, ciuperci, ardei gras, masline, ceapa
 
 $ Quattro Formaggi
-Sos de rosii, branza Emmentaler, Cheddar, Gorgonzola, Mozzarella, oregano
+Sos de rosii, Emmentaler, Cheddar, Gorgonzola, Mozzarella, oregano
 
 $ Carnivora
-Sos de rosii, branza Mozzarella, carne de pui la gratar, sunca, pepperoni, bacon afumat
+Sos de rosii, Mozzarella, carne de pui la gratar, sunca, pepperoni, bacon afumat
 
 $ Roma 
-Sos de rosii, branza Mozzarella, sunca, ciuperci marinate
+Sos de rosii,  Mozzarella, sunca, ciuperci marinate
 
 $ Modena 
-Sos de rosii, branza Mozzarella, Emmentaler, Cheddar, Parmezan, rosii cherry marinate, busuioc
+Sos de rosii, Mozzarella, Emmentaler, Cheddar, Parmezan, rosii cherry marinate, busuioc
 
 $ Torino 
-Sos de rosii, branza Mozzarella, piept de pui la gratar, bacon, ardei, masline, jalapenos
+Sos de rosii,  Mozzarella, piept de pui la gratar, bacon, ardei, masline, jalapenos
 
-$ Milano 
-Sos de rosii, branza Mozzarella, piept de pui la gratar, pepperoni, ceapa, ciuperci, ardei
+$ Milano
+Sos de rosii,  Mozzarella, piept de pui la gratar, pepperoni, ceapa, ciuperci, ardei
 
 $ Genova 
-Sos pesto cu smantana, branza Mozzarella, ciuperci marinate, piept de pui la gratar
+Sos pesto cu smantana,  Mozzarella, ciuperci marinate, piept de pui la gratar
 
 $ Parma 
-Sos de rosii, branza Mozzarella, prosciutto crudo, rosii, rucola
+Sos de rosii,  Mozzarella, prosciutto crudo, rosii, rucola
 
 $ Siena 
-Sos de rosii, branza Mozzarella, ceapa rosie, carnati, bacon
+Sos de rosii, Mozzarella, ceapa rosie, carnati, bacon
 
 $ Toscana 
-Sos de rosii, branza Mozzarella, salam Chorizo, sunca, ardei
+Sos de rosii, Mozzarella, salam Chorizo, sunca, ardei

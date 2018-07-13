@@ -24,24 +24,24 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="c43369a7-363e-4892-b942-711af0df613f">
-        <schema name="main" object-types="table, view" />
+      <connection connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4">
+        <schema name="main" object-types="column, table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="c43369a7-363e-4892-b942-711af0df613f">
+    <connection id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4">
       <console name="Connection" type="STANDARD" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="c43369a7-363e-4892-b942-711af0df613f" />
+    <connection id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/create.sql" connection-id="c43369a7-363e-4892-b942-711af0df613f" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/create.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -59,11 +59,13 @@
     <filters />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces />
+    <recently-used-interfaces>
+      <mapping database-type="SQLITE" interface-id="DEFAULT" />
+    </recently-used-interfaces>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="c43369a7-363e-4892-b942-711af0df613f" active="true">
+      <connection id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -71,8 +73,8 @@
           <config-type value="BASIC" />
           <database-version value="3.2" />
           <driver-source value="BUILTIN" />
-          <driver-library value="$PROJECT_DIR$/lib/sqlite-jdbc-3.23.1.jar" />
-          <driver value="org.sqlite.JDBC" />
+          <driver-library value="" />
+          <driver value="" />
           <url-type value="FILE" />
           <host value="" />
           <port value="" />
@@ -106,7 +108,7 @@
           <connect-automatically value="true" />
           <restore-workspace value="true" />
           <restore-workspace-deep value="true" />
-          <environment-type value="development" />
+          <environment-type value="default" />
           <idle-time-to-disconnect value="30" />
           <idle-time-to-disconnect-pool value="5" />
           <password-expiry-time value="10" />
@@ -456,7 +458,7 @@
     </code-completion-settings>
     <execution-engine-settings>
       <statement-execution>
-        <fetch-block-size value="100" />
+        <fetch-block-size value="200" />
         <execution-timeout value="20" />
         <debug-execution-timeout value="600" />
         <focus-result value="false" />
@@ -475,7 +477,7 @@
     <operation-settings>
       <transactions>
         <uncommitted-changes>
-          <on-project-close value="ASK" />
+          <on-project-close value="COMMIT" />
           <on-disconnect value="ASK" />
           <on-autocommit-toggle value="ASK" />
         </uncommitted-changes>
