@@ -4,44 +4,42 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
+
     public static void main(String args[]){
-        System.out.println("SQL test program.");
+        System.out.println("Welcome to Pizza Parlor - Java Edition.");
+
+        DBManager manager;
 
         try {
-            DBManager.getInstance().clearDB();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            manager = DBManager.getInstance();
+            manager.clearDB();
+            populateIngredients(manager);
+            populatePizzas(manager);
+
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        populateIngredients();
-        populatePizzas();
     }
 
-    private static void populateIngredients(){
+    private static void populateIngredients(DBManager manager){
         Ingredient dummyIngredient = Ingredient.getGeneric();
-        ArrayList<Object> ingredientSource = dummyIngredient.loadFromFile(dummyIngredient.getTable()+".in");
+        ArrayList<DBObject> ingredientSource = dummyIngredient.loadFromFile(dummyIngredient.getTable()+".in");
 
         try{
-            DBManager.getInstance().addObjectsFrom(ingredientSource);
-        } catch (SQLException sex){
-            sex.printStackTrace();
-        } catch (ClassNotFoundException cex){
-            cex.printStackTrace();
+            manager.addDBObjectsFrom(ingredientSource);
+        } catch (SQLException | ClassNotFoundException e){
+            e.printStackTrace();
         }
     }
 
-    private static void populatePizzas(){
+    private static void populatePizzas(DBManager manager){
         Pizza dummyPizza = Pizza.getGeneric();
-        ArrayList<Object> pizzaSource = dummyPizza.loadFromFile(dummyPizza.getTable()+".in");
+        ArrayList<DBObject> pizzaSource = dummyPizza.loadFromFile(dummyPizza.getTable()+".in");
 
         try{
-            DBManager.getInstance().addObjectsFrom(pizzaSource);
-        } catch (SQLException sex){
-            sex.printStackTrace();
-        } catch (ClassNotFoundException cex){
-            cex.printStackTrace();
+            manager.addDBObjectsFrom(pizzaSource);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
-
 }

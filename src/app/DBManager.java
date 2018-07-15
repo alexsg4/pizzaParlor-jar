@@ -9,78 +9,78 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class DBManager {
-    private static Connection connection;
-    private static final String database = "main.db";
-    private static DBManager manager;
-
-    public static DBManager getInstance() throws ClassNotFoundException, SQLException {
-        if (manager == null) {
-            manager = new DBManager();
-        }
-        return manager;
-    }
+    private static Connection mConnection;
+    private static final String mDatabase = "main.db";
+    private static DBManager mInstance;
 
     private void establishConnection() throws ClassNotFoundException, SQLException {
         // sqlite driver
         Class.forName("org.sqlite.JDBC");
         // database path, if it's new database, it will be created in the project folder
-        connection = DriverManager.getConnection("jdbc:sqlite:" + database);
-    }
-
-    private DBManager() throws ClassNotFoundException, SQLException {
-        if(connection == null ) { establishConnection(); }
+        mConnection = DriverManager.getConnection("jdbc:sqlite:" + mDatabase);
     }
 
     public Connection getConnection() throws ClassNotFoundException, SQLException {
-       if(connection == null) { establishConnection(); }
-       return connection;
+        if(mConnection == null) { establishConnection(); }
+        return mConnection;
+    }
+
+    private DBManager() throws ClassNotFoundException, SQLException {
+        if(mConnection == null ) { establishConnection(); }
+    }
+
+    public static DBManager getInstance() throws ClassNotFoundException, SQLException {
+        if (mInstance == null) {
+            mInstance = new DBManager();
+        }
+        return mInstance;
     }
 
     public void addDBObject(DBObject toAdd) throws SQLException, ClassNotFoundException {
-        if(connection == null) { establishConnection(); }
-        toAdd.addToDB(connection);
+        toAdd.addToDB(mConnection);
     }
 
-    public void addObjectsFrom(ArrayList<Object> arraySource) throws ClassNotFoundException, SQLException {
+    public void addDBObjectsFrom(ArrayList<DBObject> arraySource) throws ClassNotFoundException, SQLException {
         if(arraySource.isEmpty()) { return; }
 
-        for (Object toAdd : arraySource){
-                try {
-                    DBObject dbObject = (DBObject) toAdd;
-                    dbObject.addToDB(connection);
-                }
-                //TODO catch proper illegal conversion exception
-                catch (Exception cex){
-                    cex.printStackTrace();
-            }
+        for (DBObject toAdd : arraySource){
+            toAdd.addToDB(mConnection);
         }
     }
 
+    //Dangerous. TODO remove after testing is complete.
     public void clearDB() throws SQLException, ClassNotFoundException{
-            Connection con = this.getConnection();
-            PreparedStatement delStat = con.prepareStatement("delete from \"Ingredients\";");
-            PreparedStatement delStat2 = con.prepareStatement("delete from \"Pizza\";");
-            PreparedStatement delStat3 = con.prepareStatement("delete from \"Recipe\";");
+
+            PreparedStatement delStat = mConnection.prepareStatement("delete from \"Ingredients\";");
+            PreparedStatement delStat2 = mConnection.prepareStatement("delete from \"Pizza\";");
+            PreparedStatement delStat3 = mConnection.prepareStatement("delete from \"Recipe\";");
 
             delStat.execute();
             delStat2.execute();
             delStat3.execute();
     }
-}
 
+    public int getDBObjectID(DBObject object) throws SQLException, ClassNotFoundException {
+        return object.getDBID(mConnection);
+    }
+
+    public DBObject buildDBObjFromID(DBObject genericObject, int id) throws SQLException, ClassNotFoundException {
+        return genericObject.buildFromID(mConnection, id);
+    }
+
+
+}
 
 abstract class Item implements DBObject {
 
     @Override
-    public final int getID() throws SQLException, ClassNotFoundException{
-        int idToGet = ID_NOTFOUND;
-
-        Connection connection = DBManager.getInstance().getConnection();
+    public final int getDBID(Connection connection) throws SQLException, ClassNotFoundException{
+        int idToGet = ID_UNUSED;
 
         String table = getTable();
 
-        if(table != TABLE_UNUSED){
-            PreparedStatement getID = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE lower(name) = lower(?)");
+        if(!table.equals(TABLE_UNUSED)){
+            PreparedStatement getID = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE lower(name) == lower(?)");
             getID.setString(1, this.name);
 
             String queryResult = getID.executeQuery().getString(1);
@@ -100,11 +100,11 @@ abstract class Item implements DBObject {
     public abstract void addToDB(Connection con) throws SQLException, ClassNotFoundException;
 
     @Override
-    public abstract ArrayList<Object> loadFromFile(String path);
+    public abstract ArrayList<DBObject> loadFromFile(String path);
 
     protected String name = "Generic Item";
     protected double unitPrice = 0;
-    protected int id = ID_NOTFOUND;
+    protected int id = ID_UNUSED;
 
     protected Item(){ }
 
@@ -139,20 +139,21 @@ class Ingredient extends Item{
     private String baseUnit = "grams";
 
     @Override
-    protected final boolean canAdd(Connection con) throws SQLException{
-        // Ingredients have a UNIQUE name constraint
-        // Check name is not used
-        String table = this.getTable();
-        PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
-        checkNameStatement.setString(1, this.name);
-
+    protected final boolean canAdd(Connection con) throws SQLException {
         boolean canAdd = false;
+        if (con != null) {
+            // Ingredients have a UNIQUE name constraint
+            // Check name is not used
+            String table = getTable();
+            PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
+            checkNameStatement.setString(1, this.name);
 
-        try {
-            //count rows with the same name
-            if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
-        } catch (SQLException sex) {
-            System.out.println(sex.getMessage());
+            try {
+                //count rows with the same name
+                if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
+            } catch (SQLException sex) {
+                System.out.println(sex.getMessage());
+            }
         }
         return canAdd;
     }
@@ -183,9 +184,9 @@ class Ingredient extends Item{
     }
 
     @Override
-    public ArrayList<Object> loadFromFile(String path) {
+    public ArrayList<DBObject> loadFromFile(String path) {
 
-        ArrayList<Object> ingredients = new ArrayList<>();
+        ArrayList<DBObject> loadedIngredients = new ArrayList<>();
 
         try {
             File file = new File(path);
@@ -199,7 +200,7 @@ class Ingredient extends Item{
                 Ingredient toAdd = Ingredient.fromString(lineToProcess);
 
                 if (toAdd != null) {
-                    ingredients.add(toAdd);
+                    loadedIngredients.add(toAdd);
                 }
             }
 
@@ -209,15 +210,14 @@ class Ingredient extends Item{
             fex.printStackTrace();
         }
 
-        return ingredients;
+        return loadedIngredients;
     }
 
     @Override
-    public DBObject buildFromID(int id) throws SQLException, ClassNotFoundException {
+    public DBObject buildFromID(Connection connection, int id) throws SQLException, ClassNotFoundException {
         Ingredient toBuild = null;
-        if(id > ID_NOTFOUND){
-            Connection con = DBManager.getInstance().getConnection();
-            PreparedStatement query = con.prepareStatement(
+        if(id > ID_UNUSED && connection != null){
+            PreparedStatement query = connection.prepareStatement(
                     "SELECT * FROM " + getTable() + " WHERE rowid == ?");
             query.setInt(1, id);
             ResultSet rs = query.executeQuery();
@@ -283,24 +283,17 @@ class Ingredient extends Item{
                 {
                     price = Double.parseDouble(s.next().trim());
                 }
-            } catch (NumberFormatException nex) {
+            } catch (NumberFormatException | NoSuchElementException nex) {
                 price = 0;
                 nex.printStackTrace();
-            } catch (NoSuchElementException nsex){
-                price = 0;
-                nsex.printStackTrace();
             }
 
             try {
                 if(s.hasNext()){
                     isVeg = Integer.parseInt(s.next().trim());
                 }
-            } catch (NumberFormatException nex) {
-                isVeg = 0;
+            } catch (NumberFormatException | NoSuchElementException nex){
                 nex.printStackTrace();
-            } catch (NoSuchElementException nsex){
-                isVeg = 0;
-                nsex.printStackTrace();
             }
 
             s.close();
@@ -310,21 +303,6 @@ class Ingredient extends Item{
     }
 
     public static Ingredient getGeneric() { return new Ingredient(); }
-
-    //assumes delimiter is ',' for now
-
-    ArrayList<Ingredient> getRecipeFronString(String recipe){
-        if(recipe.matches("([\\w ]+[[/ \\d+]?[, ]?]?)+")){
-            ArrayList<Ingredient> recipeArr = new  ArrayList<>();
-            Scanner in = new Scanner(recipe).useDelimiter(", *");
-            while (in.hasNext()){
-                Ingredient toAdd = Ingredient.fromString(in.next().trim());
-                recipeArr.add(toAdd);
-            }
-            return recipeArr;
-        }
-        return null;
-    }
 
     public boolean isVeg() {
         return this.isVeg;
@@ -339,8 +317,29 @@ class Ingredient extends Item{
 class Pizza extends Item{
 
     @Override
-    public String getTable() {
+    public final String getTable() {
         return "Pizza";
+    }
+
+    @Override
+    protected final boolean canAdd(Connection con) throws SQLException{
+
+        boolean canAdd = false;
+        if(con != null){
+            // Pizzas have a UNIQUE name constraint
+            // Check name is not used
+            String table = this.getTable();
+            PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
+            checkNameStatement.setString(1, this.name);
+
+            try {
+                //count rows with the same name
+                if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
+            } catch (SQLException sex) {
+                System.out.println(sex.getMessage());
+            }
+        }
+        return canAdd;
     }
 
     @Override
@@ -349,7 +348,6 @@ class Pizza extends Item{
        //TODO update recipes for existing pizzas
 
         if (canAdd(con) && hasRecipe) {
-            String table = getTable();
             determineIsVeg();
             calculatePrice();
 
@@ -364,21 +362,22 @@ class Pizza extends Item{
             try {
                 addStatement.execute();
             } catch (SQLException sex) {
-                System.out.println(sex.getMessage());
+                sex.printStackTrace();
             }
 
-            this.id=getID();
-            for (Recipe rec : this.recipe){
+            this.id= getDBID(con);
 
-                Recipe toAdd = new Recipe(this.id, rec.getIngredientID(), rec.getQty());
-                toAdd.addToDB(con);
+            for (Recipe entry : this.recipe){
+
+                Recipe recipeEntry = new Recipe(this.id, entry.getIngredientID(), entry.getQty());
+                recipeEntry.addToDB(con);
             }
         }
     }
 
     @Override
-    public ArrayList<Object> loadFromFile(String path) {
-        ArrayList<Object> pizzas = new ArrayList<>();
+    public ArrayList<DBObject> loadFromFile(String path) {
+        ArrayList<DBObject> loadedPizzas = new ArrayList<>();
 
         try {
             File file = new File(path);
@@ -391,19 +390,18 @@ class Pizza extends Item{
 
                 titleLine = fin.nextLine();
 
-                //TODO check recipe line matches a recipe
                 if(titleLine.matches("^\\$ ([a-zA-Z&] *)+") && fin.hasNextLine()){
 
-
                     titleLine = titleLine.replaceFirst("\\$ ", "").trim();
-                    //titleLine = titleLine.trim();
 
+                    //TODO check recipe line matches a recipe
+                    recipeLine = fin.nextLine();
 
-                    ArrayList<Recipe> recipeToSet = Recipe.loadFromString(fin.nextLine());
+                    ArrayList<Recipe> recipeToSet = Recipe.loadFromString(recipeLine);
 
                     Pizza toAdd = new Pizza(titleLine);
                     toAdd.setRecipe(recipeToSet);
-                    pizzas.add(toAdd);
+                    loadedPizzas.add(toAdd);
 
                 }
             }
@@ -414,52 +412,51 @@ class Pizza extends Item{
             fex.printStackTrace();
         }
 
-        return pizzas;
+        return loadedPizzas;
     }
 
+    //Side effect: expects all pizzas have a recipe
     @Override
-    protected final boolean canAdd(Connection con) throws SQLException{
-        // Ingredients have a UNIQUE name constraint
-        // Check name is not used
-        String table = this.getTable();
-        PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
-        checkNameStatement.setString(1, this.name);
+    public DBObject buildFromID(Connection connection, int id) throws SQLException, ClassNotFoundException {
 
-        boolean canAdd = false;
-
-        try {
-            //count rows with the same name
-            if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
-        } catch (SQLException sex) {
-            System.out.println(sex.getMessage());
-        }
-        return canAdd;
-    }
-
-    @Override
-    public DBObject buildFromID(int id) throws SQLException, ClassNotFoundException {
         Pizza toBuild = null;
-        if(id > ID_NOTFOUND){
-            Connection con = DBManager.getInstance().getConnection();
-            PreparedStatement query = con.prepareStatement(
+        if (id > ID_UNUSED && connection != null) {
+            PreparedStatement query = connection.prepareStatement(
                     "SELECT * FROM " + getTable() + " WHERE id == ?");
             query.setInt(1, id);
-            ResultSet rs = query.executeQuery();
 
+            ResultSet rs = query.executeQuery();
             toBuild = new Pizza(
                     rs.getInt("pizzaID"),
                     rs.getString("name"),
                     rs.getDouble("price"),
                     rs.getBoolean("isVeg")
             );
+
+            Recipe dummyRecipe = Recipe.getGeneric();
+            String recTable = dummyRecipe.getTable();
+
+            //get IDs of all the recipe entries for this pizza
+            query = connection.prepareStatement("SELECT rowid FROM " + recTable + " WHERE pizzaID == ? ;");
+            query.setInt(1, toBuild.id);
+            int[] IDs = (int[]) query.executeQuery().getArray(1).getArray();
+
+            ArrayList<Recipe> recipeToBuild = new ArrayList<>();
+
+            //TODO test
+
+            for(int recID : IDs){
+                recipeToBuild.add((Recipe)(Recipe.getGeneric().buildFromID(connection, recID)));
+            }
+            setRecipe(recipeToBuild);
         }
+
         return toBuild;
     }
 
     private boolean isVeg = false;
     private boolean hasRecipe = false;
     private ArrayList<Recipe> recipe;
-
 
     public static Pizza getGeneric(){ return new Pizza(); }
 
@@ -487,16 +484,17 @@ class Pizza extends Item{
         if(hasRecipe){
              boolean isVeg = true;
              for(Recipe rec : recipe){
-                 Ingredient ingToBuild = Ingredient.getGeneric();
-                 try {
-                     ingToBuild = (Ingredient)ingToBuild.buildFromID(rec.getIngredientID());
+                 Ingredient ingToBuild = null;
 
-                 } catch (SQLException e) {
-                     e.printStackTrace();
-                 } catch (ClassNotFoundException e) {
+                 try {
+                     int id = rec.getIngredientID();
+                     ingToBuild = (Ingredient) DBManager.getInstance().buildDBObjFromID(Ingredient.getGeneric(), id);
+
+                 } catch (SQLException | ClassNotFoundException e) {
                      e.printStackTrace();
                  }
-                 if(ingToBuild.isVeg() == false) {
+
+                 if(ingToBuild != null && !ingToBuild.isVeg()) {
                      isVeg = false;
                      break;
                  }
@@ -505,26 +503,29 @@ class Pizza extends Item{
         }
     }
 
-    private void calculatePrice(){
-        if(hasRecipe){
+    private void calculatePrice() {
+        if (hasRecipe) {
             unitPrice = 0.;
 
-            for(Recipe rec : recipe){
-                Ingredient ingredient = null;
+            for (Recipe rec : recipe) {
+                Ingredient ingToBuild = null;
+
                 try {
-                    ingredient = (Ingredient)
-                            ( Ingredient.getGeneric().buildFromID(rec.getIngredientID()) );
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
+                    int id = rec.getIngredientID();
+                    ingToBuild = (Ingredient) DBManager.getInstance().buildDBObjFromID(Ingredient.getGeneric(), id);
+
+                } catch (SQLException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                unitPrice += ingredient.getUnitPrice() * rec.getQty();
+
+                if(ingToBuild != null){
+                    unitPrice += ingToBuild.getUnitPrice() * rec.getQty();
+                }
             }
         }
     }
 
-    public void setRecipe(ArrayList<Recipe> recipe) {
+    private void setRecipe(ArrayList<Recipe> recipe) {
         if(!hasRecipe){
             this.recipe = recipe;
             hasRecipe = true;
@@ -533,33 +534,33 @@ class Pizza extends Item{
 }
 
 class Recipe implements DBObject{
-    private int id = ID_NOTFOUND;
-    private int pizzaID;
-    private int ingredientID;
+    private int id = ID_UNUSED;
+    private int pizzaID = ID_UNUSED;
+    private int ingredientID = ID_UNUSED;
     private int qty = 1;
 
     @Override
-    public final int getID() throws SQLException, ClassNotFoundException{
-        int idToGet = ID_NOTFOUND;
-
-        Connection connection = DBManager.getInstance().getConnection();
-
-        String table = getTable();
-
-        if(table != TABLE_UNUSED){
-            PreparedStatement getID = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE pizzaID == ? AND ingID == ?");
-            getID.setInt(1, pizzaID);
-            getID.setInt(2, ingredientID);
-
-            idToGet = getID.executeQuery().getInt(1);
-        }
-
-        return idToGet;
+    public final String getTable() {
+        return "Recipe";
     }
 
     @Override
-    public String getTable() {
-        return "Recipe";
+    public final int getDBID(Connection connection) throws SQLException, ClassNotFoundException{
+        int idToGet = ID_UNUSED;
+
+        if(connection != null){
+            String table = getTable();
+
+            if(!table.equals(TABLE_UNUSED)){
+                PreparedStatement getID = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE pizzaID == ? AND ingID == ?");
+                getID.setInt(1, pizzaID);
+                getID.setInt(2, ingredientID);
+
+                idToGet = getID.executeQuery().getInt(1);
+            }
+        }
+
+        return idToGet;
     }
 
     @Override
@@ -579,7 +580,8 @@ class Recipe implements DBObject{
     }
 
     @Override
-    public ArrayList<Object> loadFromFile(String path) {
+    public ArrayList<DBObject> loadFromFile(String path) {
+        //TODO implement
         return null;
     }
 
@@ -594,37 +596,37 @@ class Recipe implements DBObject{
             Recipe toAdd = null;
 
             if(toProcess.matches( "(\\w *)+")){
-                int ingID = ID_NOTFOUND;
+                int ingID = ID_UNUSED;
 
                 try {
-                    ingID = new Ingredient(toProcess).getID();
-                    if(ingID > ID_NOTFOUND){
-                        toAdd = new Recipe(ID_NOTFOUND, ingID);
+                    Connection con = DBManager.getInstance().getConnection();
+                    ingID = new Ingredient(toProcess).getDBID(con);
+                    if(ingID > ID_UNUSED){
+                        toAdd = new Recipe(ID_UNUSED, ingID);
                         canAdd = true;
                     }
-                } catch (SQLException sex){
-                    sex.printStackTrace();
-                } catch (ClassNotFoundException cex){
-                    cex.printStackTrace();
+                } catch (SQLException | ClassNotFoundException e){
+                    e.printStackTrace();
                 }
             }
 
             else if (toProcess.matches("(\\w *)+( {1}/ \\d+)")){
                 Scanner pin = new Scanner(toProcess).useDelimiter("/");
-                Ingredient ing = new Ingredient(pin.next().trim());
 
-                int ingID = ID_NOTFOUND;
+                int ingID;
 
                 try {
-                    ingID = ing.getID();
-                    if( ingID > ID_NOTFOUND){
-                        toAdd = new Recipe(ID_NOTFOUND, ingID, Integer.parseInt(pin.next().trim()));
+                    Connection con = DBManager.getInstance().getConnection();
+
+                    String ingredientName = pin.next().trim();
+                    ingID = new Ingredient(ingredientName).getDBID(con);
+
+                    if( ingID > ID_UNUSED){
+                        toAdd = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
                         canAdd = true;
                     }
-                } catch (SQLException sex){
-                    sex.printStackTrace();
-                } catch (ClassNotFoundException cex){
-                    cex.printStackTrace();
+                } catch (SQLException | ClassNotFoundException e){
+                    e.printStackTrace();
                 } finally {
                     pin.close();
                 }
@@ -640,11 +642,11 @@ class Recipe implements DBObject{
     }
 
     @Override
-    public DBObject buildFromID(int id) throws SQLException, ClassNotFoundException {
+    public DBObject buildFromID(Connection connection, int id) throws SQLException, ClassNotFoundException {
         Recipe toBuild = null;
-        if(id > ID_NOTFOUND){
-            Connection con = DBManager.getInstance().getConnection();
-            PreparedStatement query = con.prepareStatement(
+        if(id > ID_UNUSED && connection != null){
+
+            PreparedStatement query = connection.prepareStatement(
                     "SELECT * FROM " + getTable() + " WHERE id == ?");
             query.setInt(1, id);
 
@@ -668,6 +670,11 @@ class Recipe implements DBObject{
         setQty(qty);
     }
 
+    private Recipe() { }
+
+    public static Recipe getGeneric() { return new Recipe(); }
+
+
     public Recipe(int pizzaID, int ingredientID, int qty){
         this.pizzaID = pizzaID;
         this.ingredientID = ingredientID;
@@ -684,17 +691,17 @@ class Recipe implements DBObject{
     }
 
     public void setId(int id){
-        this.id = id >= 0 ? id : ID_NOTFOUND;
+        this.id = id >= 0 ? id : ID_UNUSED;
     }
 
     public void setPizzaID(int pizzaID){
-        if(id > ID_NOTFOUND) {
+        if(id > ID_UNUSED) {
             this.pizzaID = pizzaID;
         }
     }
 
     public void setIngredientID(int ingredientID) {
-        if(ingredientID > ID_NOTFOUND){
+        if(ingredientID > ID_UNUSED){
             this.ingredientID = ingredientID;
         }
     }

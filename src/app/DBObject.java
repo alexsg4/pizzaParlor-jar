@@ -5,15 +5,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface DBObject{
-    int ID_NOTFOUND = -1;
+    int ID_UNUSED = -1;
     String TABLE_UNUSED = "NO_TABLE";
 
-    int getID() throws SQLException, ClassNotFoundException;
     String getTable();
-    void addToDB(Connection con) throws SQLException, ClassNotFoundException;
+    ArrayList<DBObject> loadFromFile(String path);
 
-    ArrayList<Object> loadFromFile(String path);
-
-    DBObject buildFromID(int id) throws SQLException, ClassNotFoundException;
+    void addToDB(Connection connection) throws SQLException, ClassNotFoundException;
+    int getDBID(Connection connection) throws SQLException, ClassNotFoundException;
+    DBObject buildFromID(Connection con, int id) throws SQLException, ClassNotFoundException;
 
 }
