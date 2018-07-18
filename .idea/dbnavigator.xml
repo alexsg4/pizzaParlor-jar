@@ -24,27 +24,27 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="1f0caea1-614b-4884-a823-2af047270ce2">
+      <connection connection-id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d">
         <schema name="main" object-types="column, table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="1f0caea1-614b-4884-a823-2af047270ce2">
-      <console name="mainDB" type="STANDARD" />
+    <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d">
+      <console name="Connection" type="STANDARD" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="1f0caea1-614b-4884-a823-2af047270ce2" />
+    <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/sql/deprecated/create.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="1f0caea1-614b-4884-a823-2af047270ce2" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="1f0caea1-614b-4884-a823-2af047270ce2" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/sql/deprecated/test.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/deprecated/create.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -68,9 +68,9 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="1f0caea1-614b-4884-a823-2af047270ce2" active="true">
+      <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" active="true">
         <database>
-          <name value="mainDB" />
+          <name value="Connection" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />

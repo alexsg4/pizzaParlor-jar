@@ -9,7 +9,7 @@ public class Main {
     private static final String DB = "main.db";
 
     public static void main(String args[]){
-        System.out.println("Welcome to Pizza Parlor - Java Edition.");
+        System.out.println("Welcome to Pizza Parlor - Java Edition!");
 
         try {
             DBManager manager = DBManager.getInstance();
@@ -24,19 +24,29 @@ public class Main {
 
     private static void loadPizzaIngredients(DBManager manager){
         Ingredient dummyIngredient = Ingredient.getGeneric();
-        String path = DIR_IN + "/" + dummyIngredient.getTable() + ".in";
+        String path = DIR_IN + "/PizzaIngredients.in";
+        Pizza dummyPizza = Pizza.getGeneric();
+        int typeId = dummyPizza.getType();
+
+        //TODO add ingredient type in file
         ArrayList<DBObject> ingredientSource = dummyIngredient.loadFromFile(path);
 
-        try{
-            manager.addDBObjectsFrom(ingredientSource);
-        } catch (SQLException | ClassNotFoundException e){
-            e.printStackTrace();
+        for(int i=0; i<ingredientSource.size(); i++){
+            Ingredient ingToAdd = (Ingredient)ingredientSource.get(i);
+            ingToAdd.setProductType(typeId);
+
+            try{
+                manager.addDBObject(ingToAdd);
+            } catch (SQLException | ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
         }
     }
 
     private static void loadPizzas(DBManager manager){
         Pizza dummyPizza = Pizza.getGeneric();
-        String path = DIR_IN + "/" + dummyPizza.getTable() + ".in";
+        String path = DIR_IN + "/" + dummyPizza.getTypeName() + ".in";
         ArrayList<DBObject> pizzaSource = dummyPizza.loadFromFile(path);
 
         try{

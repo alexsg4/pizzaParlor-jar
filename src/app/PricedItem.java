@@ -17,7 +17,7 @@ abstract class PricedItem implements DBObject {
     public abstract void addToDB(Connection con) throws SQLException, ClassNotFoundException;
 
     @Override
-    public int getDBID(Connection connection) throws SQLException, ClassNotFoundException{
+    public int getDBID(Connection connection) throws SQLException{
         int idToGet = ID_UNUSED;
 
         String table = getTable();

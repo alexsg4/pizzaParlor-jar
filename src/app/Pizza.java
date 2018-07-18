@@ -15,7 +15,7 @@ class Pizza extends CompositeProduct{
     public final boolean canAdd(Connection con) throws SQLException {
 
         boolean canAdd = false;
-        if(con != null){
+        if(con != null && hasRecipe){
             // Pizzas have a UNIQUE name constraint
             // Check name is not used
             String table = getTable();
@@ -37,17 +37,18 @@ class Pizza extends CompositeProduct{
 
         //TODO update recipes for existing pizzas
 
-        if (canAdd(con) && hasRecipe) {
+        if (canAdd(con)) {
             determineIsVeg();
             calculatePrice();
 
             //Add item with name
             PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + getTable() + " (name, price, isVeg) VALUES (?, ?, ?);");
+                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);");
 
             addStatement.setString(1, this.name);
-            addStatement.setDouble(2, this.unitPrice);
-            addStatement.setBoolean(3,this.isVeg);
+            addStatement.setInt(2, this.type);
+            addStatement.setDouble(3, this.unitPrice);
+            addStatement.setBoolean(4,this.isVeg);
 
             try {
                 addStatement.execute();
@@ -69,6 +70,7 @@ class Pizza extends CompositeProduct{
     public ArrayList<DBObject> loadFromFile(String path) {
         ArrayList<DBObject> loadedPizzas = new ArrayList<>();
 
+        //TODO use BufferedReader
         try {
             File file = new File(path);
             Scanner fin = new Scanner(file).useDelimiter(System.getProperty("line.separator"));
@@ -107,7 +109,7 @@ class Pizza extends CompositeProduct{
 
     //Side effect: expects all pizzas have a recipe
     @Override
-    public DBObject buildFromID(Connection connection, int id) throws SQLException, ClassNotFoundException {
+    public DBObject buildFromID(Connection connection, int id) throws SQLException {
 
         Pizza toBuild = null;
         if (id > ID_UNUSED && connection != null) {
@@ -117,8 +119,9 @@ class Pizza extends CompositeProduct{
 
             ResultSet rs = query.executeQuery();
             toBuild = new Pizza(
-                    rs.getInt("pizzaID"),
+                    rs.getInt("id"),
                     rs.getString("name"),
+                    rs.getInt("type"),
                     rs.getDouble("price"),
                     rs.getBoolean("isVeg")
             );
@@ -161,6 +164,12 @@ class Pizza extends CompositeProduct{
 
     private Pizza(int id, String name, double price, boolean isVeg){
         super(name, price);
+        this.id = id;
+        this.isVeg = isVeg;
+    }
+
+    private Pizza(int id, String name, int type, double price, boolean isVeg){
+        super(name, type, price);
         this.id = id;
         this.isVeg = isVeg;
     }

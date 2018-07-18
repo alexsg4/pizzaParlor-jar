@@ -1,7 +1,6 @@
 package app;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,12 +18,14 @@ public class Ingredient extends PricedItem {
     @Override
     public final boolean canAdd(Connection con) throws SQLException {
         boolean canAdd = false;
-        if (con != null) {
+        if (con != null && productType > ID_UNUSED) {
             // Ingredients have a UNIQUE name constraint
             // Check name is not used
             String table = getTable();
-            PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
+            PreparedStatement checkNameStatement = con.prepareStatement(
+                    "SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?) AND productType = ?; ");
             checkNameStatement.setString(1, this.name);
+            checkNameStatement.setInt(2, this.productType);
 
             try {
                 //count rows with the same name
@@ -41,20 +42,20 @@ public class Ingredient extends PricedItem {
         return "Ingredients";
     }
 
-    //TODO consider product type when adding to DB
     @Override
     public final void addToDB(Connection con) throws SQLException {
 
         if (canAdd(con)) {
             String table = getTable();
             PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + table + " (name, unitPrice, isVeg, unit) VALUES (?, ?, ?, ?);"
+                    "INSERT INTO " + table + " (name, productType, unitPrice, isVeg, unit) VALUES (?, ?, ?, ?, ?);"
             );
 
             addStatement.setString(1, this.name);
-            addStatement.setDouble(2, this.unitPrice);
-            addStatement.setBoolean(3, this.isVeg);
-            addStatement.setString(4, this.baseUnit);
+            addStatement.setInt(2, this.productType);
+            addStatement.setDouble(3, this.unitPrice);
+            addStatement.setBoolean(4, this.isVeg);
+            addStatement.setString(5, this.baseUnit);
 
             try {
                 addStatement.execute();
@@ -71,22 +72,18 @@ public class Ingredient extends PricedItem {
 
         try {
             File file = new File(path);
-            Scanner fin = new Scanner(file).useDelimiter(System.getProperty("line.separator"));
+            BufferedReader fin = new BufferedReader(new FileReader(file));
 
-            while (fin.hasNextLine()) {
-
-                String lineToProcess;
-                lineToProcess = fin.nextLine();
-
-                app.Ingredient toAdd = app.Ingredient.fromString(lineToProcess);
-
-                if (toAdd != null) {
-                    loadedIngredients.add(toAdd);
+            String lineToProcess;
+            try {
+                while ((lineToProcess = fin.readLine()) != null ) {
+                    app.Ingredient toAdd = app.Ingredient.fromString(lineToProcess);
+                    if (toAdd != null) {
+                        loadedIngredients.add(toAdd);
+                    }
                 }
-            }
-
-            fin.close();
-
+                fin.close();
+            } catch (IOException ex) { ex.printStackTrace(); }
         } catch (FileNotFoundException fex) {
             fex.printStackTrace();
         }
@@ -95,17 +92,18 @@ public class Ingredient extends PricedItem {
     }
 
     @Override
-    public DBObject buildFromID(Connection connection, int id) throws SQLException, ClassNotFoundException {
+    public DBObject buildFromID(Connection connection, int id) throws SQLException {
         app.Ingredient toBuild = null;
         if(id > ID_UNUSED && connection != null){
             PreparedStatement query = connection.prepareStatement(
-                    "SELECT * FROM " + getTable() + " WHERE rowid == ?");
+                    "SELECT * FROM " + getTable() + " WHERE rowid = ?");
             query.setInt(1, id);
             ResultSet rs = query.executeQuery();
 
             toBuild = new app.Ingredient(
-                    rs.getInt("ingID"),
+                    rs.getInt("id"),
                     rs.getString("name"),
+                    rs.getInt("productType"),
                     rs.getDouble("unitPrice"),
                     rs.getBoolean("isVeg"),
                     rs.getString("unit")
@@ -197,6 +195,10 @@ public class Ingredient extends PricedItem {
 
     public String getBaseUnit() {
         return baseUnit;
+    }
+
+    public void setProductType(int productType){
+        this.productType = productType > ID_UNUSED ? productType : ID_UNUSED;
     }
 
 }

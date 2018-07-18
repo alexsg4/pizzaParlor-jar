@@ -13,11 +13,6 @@ public class Recipe implements DBObject {
     private int ingredientID = ID_UNUSED;
     private int qty = 1;
 
-    //TODO check additional conditions
-    @Override
-    public boolean canAdd(Connection con) {
-        return true; //for now
-    }
 
     @Override
     public final String getTable() {
@@ -25,29 +20,52 @@ public class Recipe implements DBObject {
     }
 
     @Override
-    public final int getDBID(Connection connection) throws SQLException {
+    public int getDBID(Connection connection) throws SQLException {
         int idToGet = ID_UNUSED;
 
         if(connection != null){
             String table = getTable();
 
             if(!table.equals(TABLE_UNUSED)){
-                PreparedStatement getIDQuery = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?");
+                PreparedStatement getIDQuery = connection.prepareStatement(
+                        "SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?"
+                );
                 getIDQuery.setInt(1, productID);
                 getIDQuery.setInt(2, ingredientID);
 
-                idToGet = getIDQuery.executeQuery().getInt(1);
+                ResultSet rs = getIDQuery.executeQuery();
+                if(rs.next()){
+                    String idLine = rs.getString(1);
+                    if(idLine.matches("\\d+")){ idToGet = Integer.parseInt(idLine); }
+                }
             }
         }
 
         return idToGet;
     }
 
+    //TODO check additional conditions
+    @Override
+    public boolean canAdd(Connection con) {
+
+        boolean canAdd = false;
+
+        try {
+            if(getDBID(con) != ID_UNUSED){
+                canAdd = true;
+            }
+
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+        return !canAdd;
+    }
+
     @Override
     public void addToDB (Connection con) throws SQLException {
 
-        if(getDBID(con) != ID_UNUSED) {
-
+        if(canAdd(con)){
             String table = getTable();
             PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
             insertStatement.setInt(1, productID);
@@ -59,6 +77,7 @@ public class Recipe implements DBObject {
             } catch (SQLException sex) {
                 sex.printStackTrace();
             }
+
         }
     }
 

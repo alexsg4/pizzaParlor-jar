@@ -1,5 +1,7 @@
 package app;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -7,6 +9,24 @@ public abstract class CompositeProduct extends Product {
 
     @Override
     public abstract ArrayList<DBObject> loadFromFile(String path);
+
+    @Override
+    protected void insertTypeEntry() {
+        try{
+            Connection con = DBManager.getInstance().getConnection();
+            PreparedStatement insertStatement = con.prepareStatement(
+                    "INSERT INTO " + TABLE_TYPES + "(name, isComposite) VALUES (?, ?);"
+            );
+            insertStatement.setString(1, getTypeName());
+            insertStatement.setBoolean(2, true);
+
+            int typeId = insertStatement.executeUpdate();
+            setType(typeId);
+
+        } catch (SQLException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
 
     protected boolean hasRecipe = false;
     protected ArrayList<Recipe> recipe;
@@ -24,6 +44,10 @@ public abstract class CompositeProduct extends Product {
 
     protected CompositeProduct(String name, double unitPrice){
         super(name, unitPrice);
+    }
+
+    protected CompositeProduct(String name, int type, double unitPrice){
+        super(name, type, unitPrice);
     }
 
     protected CompositeProduct(String name){
