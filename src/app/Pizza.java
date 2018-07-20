@@ -1,13 +1,11 @@
 package app;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class Pizza extends CompositeProduct{
 
@@ -22,9 +20,11 @@ class Pizza extends CompositeProduct{
             PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
             checkNameStatement.setString(1, this.name);
 
-            try {
+            try(ResultSet rs = checkNameStatement.executeQuery()) {
                 //count rows with the same name
-                if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
+                if (rs.next()){
+                    if(rs.getInt(1) == 0) { canAdd = true; }
+                }
             } catch (SQLException sex) {
                 System.out.println(sex.getMessage());
             }
@@ -73,32 +73,38 @@ class Pizza extends CompositeProduct{
         //TODO use BufferedReader
         try {
             File file = new File(path);
-            Scanner fin = new Scanner(file).useDelimiter(System.getProperty("line.separator"));
+            BufferedReader fin = new BufferedReader(new FileReader(file));
 
-            while (fin.hasNextLine()) {
+            try {
+                String lineToProcess;
+                while ( (lineToProcess = fin.readLine()) != null) {
 
-                String titleLine;
-                String recipeLine;
+                    String titleLine;
+                    String recipeLine;
 
-                titleLine = fin.nextLine();
+                    titleLine = lineToProcess;
 
-                if(titleLine.matches("^\\$ ([a-zA-Z&] *)+") && fin.hasNextLine()){
+                    if (titleLine.matches("^\\$ ([a-zA-Z&] *)+") && (lineToProcess = fin.readLine()) != null) {
 
-                    titleLine = titleLine.replaceFirst("\\$ ", "").trim();
+                        titleLine = titleLine.replaceFirst("\\$ ", "").trim();
 
-                    //TODO check recipe line matches a recipe
-                    recipeLine = fin.nextLine();
+                        //TODO check recipe line matches a recipe
+                        recipeLine = lineToProcess;
 
-                    ArrayList<Recipe> recipeToSet = Recipe.arrayFromString(recipeLine);
+                        ArrayList<Recipe> recipeToSet = Recipe.arrayFromString(recipeLine);
 
-                    Pizza toAdd = new Pizza(titleLine);
-                    toAdd.setRecipe(recipeToSet);
-                    loadedPizzas.add(toAdd);
+                        Pizza toAdd = new Pizza(titleLine);
+                        toAdd.setRecipe(recipeToSet);
+                        loadedPizzas.add(toAdd);
 
+                    }
                 }
-            }
 
-            fin.close();
+                fin.close();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
         } catch (FileNotFoundException fex) {
             fex.printStackTrace();
@@ -117,31 +123,44 @@ class Pizza extends CompositeProduct{
                     "SELECT * FROM " + getTable() + " WHERE id == ?");
             query.setInt(1, id);
 
-            ResultSet rs = query.executeQuery();
-            toBuild = new Pizza(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt("type"),
-                    rs.getDouble("price"),
-                    rs.getBoolean("isVeg")
-            );
 
-            Recipe dummyRecipe = Recipe.getGeneric();
-            String recTable = dummyRecipe.getTable();
-
-            //get IDs of all the recipe entries for this pizza
-            query = connection.prepareStatement("SELECT rowid FROM " + recTable + " WHERE pizzaID == ? ;");
-            query.setInt(1, toBuild.id);
-            int[] IDs = (int[]) query.executeQuery().getArray(1).getArray();
-
-            ArrayList<Recipe> recipeToBuild = new ArrayList<>();
-
-            //TODO test
-
-            for(int recID : IDs){
-                recipeToBuild.add((Recipe)(Recipe.getGeneric().buildFromID(connection, recID)));
+            try (ResultSet rs = query.executeQuery()) {
+                if (rs.next()) {
+                    toBuild = new Pizza(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("type"),
+                            rs.getDouble("price"),
+                            rs.getBoolean("isVeg")
+                    );
+                }
             }
-            setRecipe(recipeToBuild);
+
+            if (toBuild != null) {
+
+                Recipe dummyRecipe = Recipe.getGeneric();
+                String recTable = dummyRecipe.getTable();
+
+                //get IDs of all the recipe entries for this pizza
+                PreparedStatement query2 = connection.prepareStatement("SELECT rowid FROM " + recTable + " WHERE pizzaID == ? ;");
+                query2.setInt(1, toBuild.id);
+
+                try(ResultSet rs = query2.executeQuery()) {
+                    ArrayList<Integer> IDs = new ArrayList<>();
+                    while (rs.next()){
+                        IDs.add(rs.getInt(1));
+                    }
+                    ArrayList<Recipe> recipeToBuild = new ArrayList<>();
+
+                    for (int recID : IDs) {
+                        recipeToBuild.add((Recipe) (Recipe.getGeneric().buildFromID(connection, recID)));
+                    }
+                    if(!recipeToBuild.isEmpty())
+                    {
+                        setRecipe(recipeToBuild);
+                    }
+                }
+            }
         }
 
         return toBuild;

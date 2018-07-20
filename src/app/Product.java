@@ -73,7 +73,6 @@ public abstract class Product extends PricedItem {
             checkStatement.setString(1, getTypeName());
 
             //String entriesLine = checkStatement.executeQuery().getString(1);
-
             ResultSet rs = checkStatement.executeQuery();
             ArrayList<String> list = new ArrayList<>();
             while(rs.next()){

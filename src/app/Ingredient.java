@@ -27,9 +27,11 @@ public class Ingredient extends PricedItem {
             checkNameStatement.setString(1, this.name);
             checkNameStatement.setInt(2, this.productType);
 
-            try {
+            try (ResultSet rs = checkNameStatement.executeQuery()){
                 //count rows with the same name
-                if (checkNameStatement.executeQuery().getInt(1) == 0) canAdd = true;
+                if (rs.next()){
+                    if(rs.getInt(1) == 0){ canAdd = true; }
+                }
             } catch (SQLException sex) {
                 System.out.println(sex.getMessage());
             }
@@ -98,16 +100,19 @@ public class Ingredient extends PricedItem {
             PreparedStatement query = connection.prepareStatement(
                     "SELECT * FROM " + getTable() + " WHERE rowid = ?");
             query.setInt(1, id);
-            ResultSet rs = query.executeQuery();
 
-            toBuild = new app.Ingredient(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt("productType"),
-                    rs.getDouble("unitPrice"),
-                    rs.getBoolean("isVeg"),
-                    rs.getString("unit")
-            );
+            try(ResultSet rs = query.executeQuery()){
+                if(rs.next()) {
+                    toBuild = new app.Ingredient(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("productType"),
+                            rs.getDouble("unitPrice"),
+                            rs.getBoolean("isVeg"),
+                            rs.getString("unit")
+                    );
+                }
+            }
         }
         return toBuild;
     }

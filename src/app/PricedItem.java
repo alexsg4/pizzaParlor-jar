@@ -2,6 +2,7 @@ package app;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -26,9 +27,12 @@ abstract class PricedItem implements DBObject {
             PreparedStatement getID = connection.prepareStatement("SELECT rowid FROM " + table + " WHERE lower(name) == lower(?)");
             getID.setString(1, this.name);
 
-            String queryResult = getID.executeQuery().getString(1);
-
-            if(queryResult.matches("\\d+")){ idToGet = Integer.parseInt(queryResult); }
+            try(ResultSet rs = getID.executeQuery()){
+                if(rs.next()){
+                    String queryResult = rs.getString(1);
+                    if(queryResult.matches("\\d+")){ idToGet = Integer.parseInt(queryResult); }
+                }
+            }
         }
 
         return idToGet;

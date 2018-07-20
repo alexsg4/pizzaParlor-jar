@@ -13,7 +13,6 @@ public class Recipe implements DBObject {
     private int ingredientID = ID_UNUSED;
     private int qty = 1;
 
-
     @Override
     public final String getTable() {
         return "Recipes";
@@ -33,10 +32,13 @@ public class Recipe implements DBObject {
                 getIDQuery.setInt(1, productID);
                 getIDQuery.setInt(2, ingredientID);
 
-                ResultSet rs = getIDQuery.executeQuery();
-                if(rs.next()){
-                    String idLine = rs.getString(1);
-                    if(idLine.matches("\\d+")){ idToGet = Integer.parseInt(idLine); }
+                try(ResultSet rs = getIDQuery.executeQuery()) {
+                    if (rs.next()) {
+                        String idLine = rs.getString(1);
+                        if (idLine.matches("\\d+")) {
+                            idToGet = Integer.parseInt(idLine);
+                        }
+                    }
                 }
             }
         }
@@ -87,7 +89,6 @@ public class Recipe implements DBObject {
         return null;
     }
 
-    //TODO implement for only one object
     public static ArrayList<Recipe> arrayFromString(String src){
         ArrayList<Recipe> toReturn = new ArrayList<>();
 
@@ -198,14 +199,15 @@ public class Recipe implements DBObject {
                     "SELECT ROWID, * FROM " + getTable() + " WHERE ROWID = ?");
             query.setInt(1, id);
 
-            ResultSet rs = query.executeQuery();
+            try(ResultSet rs = query.executeQuery()){
 
-            toBuild = new Recipe(
-                    rs.getInt("rowid"),
-                    rs.getInt("productID"),
-                    rs.getInt("ingredientID"),
-                    rs.getInt("qty")
-            );
+                toBuild = new Recipe(
+                        rs.getInt(1),
+                        rs.getInt("productID"),
+                        rs.getInt("ingredientID"),
+                        rs.getInt("qty")
+                );
+            }
         }
 
         return toBuild;

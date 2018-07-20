@@ -1,9 +1,6 @@
 package app;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DBManager {
@@ -68,13 +65,17 @@ public class DBManager {
     }
 
     //TODO test
-    public Object getDBObjectColumnData(DBObject object, String column) throws SQLException, ClassNotFoundException{
-        Object property = null;
+    public String getDBObjectColumnData(DBObject object, String column) throws SQLException, ClassNotFoundException{
+        String property = null;
         int id = getDBObjectID(object);
         PreparedStatement queryStatement = mConnection.prepareStatement(
                 "SELECT ROWID, * FROM " + object.getTable() + " ROWID rowid = ?;");
         queryStatement.setInt(1, id);
-        property = queryStatement.executeQuery().getObject(column);
+        try(ResultSet rs = queryStatement.executeQuery()){
+            if(rs.next()){
+                property = rs.getString(column);
+            }
+        }
 
         return property;
     }
