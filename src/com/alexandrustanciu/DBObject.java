@@ -1,4 +1,4 @@
-package app;
+package com.alexandrustanciu;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,4 +15,5 @@ public interface DBObject{
     int getDBID(Connection connection) throws SQLException, ClassNotFoundException;
     DBObject buildFromID(Connection con, int id) throws SQLException, ClassNotFoundException;
 
+    boolean canAdd(Connection con) throws SQLException;
 }

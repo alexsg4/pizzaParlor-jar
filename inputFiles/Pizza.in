@@ -3,12 +3,15 @@
 # Whitespace is ignored. Names are mandatory. 
 # Product syntax:
 #
-# $ [name] / [optional-tags]
-# [ingredient1] / [quantity], [ingredient2], ... [ingredientN]   
+# $ [name] / [optional-tags] = Title Line
+# [ingredient1] / [quantity], [ingredient2], ... [ingredientN] = Recipe Line
 #
 # Quantity is optional and is expressed as a positive number N which translates naturally to "N x baseUnits"
 # e. g. Pepperoni / 5, Cheese / 2, Tomato
 # translates to "5 x 10g Pepperoni, 2 x 100g Cheese, 1 x 100g Tomato" assuming baseUnits
+
+Actually this is ignored too. Basically everything that's not a title line followed by a 
+Recipe Line is ignored.
 
 $ Spicy Pepperoni
 Sos de rosii, Mozzarella, pepperoni, jalapenos, rosii cubulete
