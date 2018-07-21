@@ -13,8 +13,6 @@ public class Main {
 
         try {
             DBManager manager = DBManager.getInstance();
-            //TODO remove
-            manager.clearDB();
             loadPizzaIngredients(manager);
             loadPizzas(manager);
 
