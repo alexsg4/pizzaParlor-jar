@@ -64,12 +64,11 @@ public class DBManager {
         return genericObject.buildFromID(mConnection, id);
     }
 
-    //TODO test
-    public String getDBObjectColumnData(DBObject object, String column) throws SQLException, ClassNotFoundException{
+    public String getDBObjectColumn(DBObject object, String column) throws SQLException, ClassNotFoundException{
         String property = null;
         int id = getDBObjectID(object);
         PreparedStatement queryStatement = mConnection.prepareStatement(
-                "SELECT ROWID, * FROM " + object.getTable() + " ROWID rowid = ?;");
+                "SELECT ROWID, * FROM " + object.getTable() + " WHERE ROWID = ?;");
         queryStatement.setInt(1, id);
         try(ResultSet rs = queryStatement.executeQuery()){
             if(rs.next()){
