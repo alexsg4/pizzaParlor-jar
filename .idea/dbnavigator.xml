@@ -24,27 +24,24 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d">
+      <connection connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488">
         <schema name="main" object-types="column, table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d">
+    <connection id="5c2f5f6c-2789-45bd-96bb-c6095cce8488">
       <console name="Connection" type="STANDARD" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" />
+    <connection id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/sql/deprecated/create.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/deprecated/test.sql" connection-id="2502ae9c-670c-43b4-8bc5-7b9004c76cd4" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="1f0caea1-614b-4884-a823-2af047270ce2" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -62,13 +59,11 @@
     <filters />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces>
-      <mapping database-type="SQLITE" interface-id="DEFAULT" />
-    </recently-used-interfaces>
+    <recently-used-interfaces />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="9fedfef6-b95c-4f8f-a8e9-2522a330b79d" active="true">
+      <connection id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -461,7 +456,7 @@
     </code-completion-settings>
     <execution-engine-settings>
       <statement-execution>
-        <fetch-block-size value="200" />
+        <fetch-block-size value="100" />
         <execution-timeout value="20" />
         <debug-execution-timeout value="600" />
         <focus-result value="false" />
@@ -480,7 +475,7 @@
     <operation-settings>
       <transactions>
         <uncommitted-changes>
-          <on-project-close value="COMMIT" />
+          <on-project-close value="ASK" />
           <on-disconnect value="ASK" />
           <on-autocommit-toggle value="ASK" />
         </uncommitted-changes>

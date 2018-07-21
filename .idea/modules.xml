@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sqliteTest.iml" filepath="$PROJECT_DIR$/sqliteTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pizzaParlor-jar.iml" filepath="$PROJECT_DIR$/pizzaParlor-jar.iml" />
     </modules>
   </component>
 </project>
