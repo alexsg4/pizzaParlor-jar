@@ -46,7 +46,6 @@ public class Recipe implements DBObject {
         return idToGet;
     }
 
-    //TODO check additional conditions
     @Override
     public boolean canAdd(Connection con) {
 

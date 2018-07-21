@@ -70,7 +70,6 @@ class Pizza extends CompositeProduct{
     public ArrayList<DBObject> loadFromFile(String path) {
         ArrayList<DBObject> loadedPizzas = new ArrayList<>();
 
-        //TODO use BufferedReader
         try {
             File file = new File(path);
             BufferedReader fin = new BufferedReader(new FileReader(file));
