@@ -1,4 +1,4 @@
-package app;
+package com.alexandrustanciu;
 
 import java.io.*;
 import java.sql.Connection;
@@ -79,7 +79,7 @@ public class Ingredient extends PricedItem {
             String lineToProcess;
             try {
                 while ((lineToProcess = fin.readLine()) != null ) {
-                    app.Ingredient toAdd = app.Ingredient.fromString(lineToProcess);
+                    Ingredient toAdd = Ingredient.fromString(lineToProcess);
                     if (toAdd != null) {
                         loadedIngredients.add(toAdd);
                     }
@@ -95,7 +95,7 @@ public class Ingredient extends PricedItem {
 
     @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
-        app.Ingredient toBuild = null;
+        Ingredient toBuild = null;
         if(id > ID_UNUSED && connection != null){
             PreparedStatement query = connection.prepareStatement(
                     "SELECT * FROM " + getTable() + " WHERE rowid = ?");
@@ -103,7 +103,7 @@ public class Ingredient extends PricedItem {
 
             try(ResultSet rs = query.executeQuery()){
                 if(rs.next()) {
-                    toBuild = new app.Ingredient(
+                    toBuild = new Ingredient(
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getInt("productType"),
@@ -157,7 +157,7 @@ public class Ingredient extends PricedItem {
         this.isVeg = veg;
     }
 
-    public static app.Ingredient fromString(String str) {
+    public static Ingredient fromString(String str) {
 
         //if(str.matches("^[^\\s*/\\s*]+$")) {
         if(str.matches("[^\\s*][[\\S+\\s+]+[\\s*/\\s*]*]+\\s*$")) {
@@ -187,12 +187,12 @@ public class Ingredient extends PricedItem {
             }
 
             s.close();
-            return new app.Ingredient(name, price, isVeg);
+            return new Ingredient(name, price, isVeg);
         }
         return null;
     }
 
-    public static app.Ingredient getGeneric() { return new app.Ingredient(); }
+    public static Ingredient getGeneric() { return new Ingredient(); }
 
     public boolean isVeg() {
         return this.isVeg;

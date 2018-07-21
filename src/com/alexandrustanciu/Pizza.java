@@ -1,4 +1,4 @@
-package app;
+package com.alexandrustanciu;
 
 import java.io.*;
 import java.sql.Connection;

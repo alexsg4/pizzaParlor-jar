@@ -1,4 +1,4 @@
-package app;
+package com.alexandrustanciu;
 
 import java.sql.Connection;
 import java.sql.SQLException;

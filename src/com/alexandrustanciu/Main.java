@@ -1,4 +1,4 @@
-package app;
+package com.alexandrustanciu;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ public class Main {
 
         try {
             DBManager manager = DBManager.getInstance();
+            //TODO remove
             manager.clearDB();
             loadPizzaIngredients(manager);
             loadPizzas(manager);
