@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-class Pizza extends CompositeProduct{
+class Pizza extends CompositeProduct implements FileLoadable<DBObject>{
 
     @Override
     public final boolean canAdd(Connection con) throws SQLException {
@@ -72,6 +72,51 @@ class Pizza extends CompositeProduct{
 
         try {
             File file = new File(path);
+            BufferedReader fin = new BufferedReader(new FileReader(file));
+
+            try {
+                String lineToProcess;
+                while ( (lineToProcess = fin.readLine()) != null) {
+
+                    String titleLine;
+                    String recipeLine;
+
+                    titleLine = lineToProcess;
+
+                    if (titleLine.matches("^\\$ ([a-zA-Z&] *)+") && (lineToProcess = fin.readLine()) != null) {
+
+                        titleLine = titleLine.replaceFirst("\\$ ", "").trim();
+
+                        //TODO check recipe line matches a recipe
+                        recipeLine = lineToProcess;
+
+                        ArrayList<Recipe> recipeToSet = Recipe.arrayFromString(recipeLine);
+
+                        Pizza toAdd = new Pizza(titleLine);
+                        toAdd.setRecipe(recipeToSet);
+                        loadedPizzas.add(toAdd);
+
+                    }
+                }
+
+                fin.close();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        } catch (FileNotFoundException fex) {
+            fex.printStackTrace();
+        }
+
+        return loadedPizzas;
+    }
+
+    @Override
+    public ArrayList<DBObject> loadFromFile(File file) {
+        ArrayList<DBObject> loadedPizzas = new ArrayList<>();
+
+        try {
             BufferedReader fin = new BufferedReader(new FileReader(file));
 
             try {

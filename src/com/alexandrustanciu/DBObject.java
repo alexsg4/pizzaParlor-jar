@@ -9,7 +9,7 @@ public interface DBObject{
     String TABLE_UNUSED = "NO_TABLE";
 
     String getTable();
-    ArrayList<DBObject> loadFromFile(String path);
+    //ArrayList<DBObject> loadFromFile(String path);
 
     void addToDB(Connection connection) throws SQLException, ClassNotFoundException;
     int getDBID(Connection connection) throws SQLException, ClassNotFoundException;

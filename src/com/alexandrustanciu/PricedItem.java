@@ -12,9 +12,6 @@ abstract class PricedItem implements DBObject {
     public abstract String getTable();
 
     @Override
-    public abstract ArrayList<DBObject> loadFromFile(String path);
-
-    @Override
     public abstract void addToDB(Connection con) throws SQLException, ClassNotFoundException;
 
     @Override

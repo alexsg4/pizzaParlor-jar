@@ -8,9 +8,6 @@ import java.util.ArrayList;
 public abstract class CompositeProduct extends Product {
 
     @Override
-    public abstract ArrayList<DBObject> loadFromFile(String path);
-
-    @Override
     protected void insertTypeEntry() {
         try{
             Connection con = DBManager.getInstance().getConnection();

@@ -82,12 +82,6 @@ public class Recipe implements DBObject {
         }
     }
 
-    @Override
-    public ArrayList<DBObject> loadFromFile(String path) {
-        //TODO implement
-        return null;
-    }
-
     public static ArrayList<Recipe> arrayFromString(String src){
         ArrayList<Recipe> toReturn = new ArrayList<>();
 
