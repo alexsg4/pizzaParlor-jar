@@ -2,60 +2,49 @@ package com.alexandrustanciu;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.DB.DBObject;
-import com.alexandrustanciu.Orders.OrderItem;
-import com.alexandrustanciu.Orders.OrderManager;
 import com.alexandrustanciu.Orders.OrderSize;
 import com.alexandrustanciu.Products.Ingredient;
 import com.alexandrustanciu.Products.Pizza;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.sql.Connection;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Main {
+public class Main extends Application {
     private static final String DIR_IN = "inputFiles";
     private static final String DIR_SQL = "sql";
+    private static final String DIR_RES = "resources";
+    private static final String DIR_VIEW = "UViews";
+    private static final String DIR_CTRL = "UControllers";
     private static final String DB = "main.db";
 
+    private static final String APP_TITLE = "Pizza Parlor - Java Edition";
+
     public static void main(String args[]){
-        System.out.println("Welcome to Pizza Parlor - Java Edition!");
+        System.out.println("Welcome to " + APP_TITLE + "!");
 
         loadDBItems();
-
-        //TODO remove after testing START
-        try{
-            Connection con = DBManager.getInstance().getConnection();
-            OrderManager.clearAllOrders(con);
-        } catch (SQLException ex){
-            ex.printStackTrace();
-        }
-
-        OrderManager.initOrder();
-        OrderManager.addOrderItem(new OrderItem(3,4));
-        OrderManager.addOrderItem(new OrderItem(11,2));
-        OrderManager.addOrderItem(new OrderItem(2,1));
-        OrderManager.addOrderItem(new OrderItem(3,2));
-        OrderManager.addOrderItem(new OrderItem(3,2));
-
-        try{
-            Connection con = DBManager.getInstance().getConnection();
-            OrderManager.submitOrder(con);
-        } catch (SQLException ex){
-            ex.printStackTrace();
-        }
-
-        OrderManager.initOrder();
-        OrderManager.addOrderItem(new OrderItem(3,2));
-        OrderManager.addOrderItem(new OrderItem(3,2));
-        try{
-            Connection con = DBManager.getInstance().getConnection();
-            OrderManager.submitOrder(con);
-        } catch (SQLException ex){
-            ex.printStackTrace();
-        }
-
-        //TODO remove after testing END
+        launch(args);
     }
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(DIR_VIEW + "/FMain.fxml"));
+        root.getStylesheets().add("/css/mainControls.css");
+
+        primaryStage.setTitle(APP_TITLE);
+
+        Scene mainScene = new Scene(root, 500, 450);
+
+        primaryStage.setScene(mainScene);
+        primaryStage.show();
+    }
+
 
 
     private static void loadPizzaIngredients(DBManager manager){
