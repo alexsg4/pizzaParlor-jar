@@ -1,4 +1,7 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBObject;
+import com.alexandrustanciu.FileLoadable;
 
 import java.io.*;
 import java.sql.Connection;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Ingredient extends PricedItem {
+public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
 
     private boolean isVeg = false;
     private String baseUnit = "g";
@@ -94,6 +97,32 @@ public class Ingredient extends PricedItem {
     }
 
     @Override
+    public ArrayList<DBObject> loadFromFile(File file) {
+
+        ArrayList<DBObject> loadedIngredients = new ArrayList<>();
+
+        try {
+            BufferedReader fin = new BufferedReader(new FileReader(file));
+
+            String lineToProcess;
+            try {
+                while ((lineToProcess = fin.readLine()) != null ) {
+                    Ingredient toAdd = Ingredient.fromString(lineToProcess);
+                    if (toAdd != null) {
+                        loadedIngredients.add(toAdd);
+                    }
+                }
+                fin.close();
+            } catch (IOException ex) { ex.printStackTrace(); }
+        } catch (FileNotFoundException fex) {
+            fex.printStackTrace();
+        }
+
+        return loadedIngredients;
+    }
+
+
+    @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
         Ingredient toBuild = null;
         if(id > ID_UNUSED && connection != null){
@@ -102,7 +131,7 @@ public class Ingredient extends PricedItem {
             query.setInt(1, id);
 
             try(ResultSet rs = query.executeQuery()){
-                if(rs.next()) {
+                while(rs.next()) {
                     toBuild = new Ingredient(
                             rs.getInt("id"),
                             rs.getString("name"),

@@ -1,4 +1,7 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
+import com.alexandrustanciu.DB.DBObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +21,128 @@ public class Recipe implements DBObject {
         return "Recipes";
     }
 
+    public static ArrayList<Recipe> arrayFromString(String src){
+        ArrayList<Recipe> toReturn = new ArrayList<>();
+
+        Scanner in = new Scanner(src).useDelimiter(", *");
+        while (in.hasNext()){
+            String toProcess = in.next().trim();
+
+            boolean canAdd = false;
+            Recipe toAdd = null;
+
+            //TODO refactor
+
+            if(toProcess.matches( "(\\w *)+")){
+                try {
+                    Connection con = DBManager.getInstance().getConnection();
+                    int ingID = new Ingredient(toProcess).getIDfromDB(con);
+                    if(ingID > ID_UNUSED){
+                        toAdd = new Recipe(ID_UNUSED, ingID);
+                        canAdd = true;
+                    }
+                } catch (SQLException  e){
+                    e.printStackTrace();
+                }
+            }
+
+            else if (toProcess.matches("(\\w *)+( {1}/ \\d+)")){
+                Scanner pin = new Scanner(toProcess).useDelimiter("/");
+
+                int ingID;
+
+                try {
+                    Connection con = DBManager.getInstance().getConnection();
+
+                    String ingredientName = pin.next().trim();
+                    ingID = new Ingredient(ingredientName).getIDfromDB(con);
+
+                    if( ingID > ID_UNUSED){
+                        toAdd = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
+                        canAdd = true;
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
+                } finally {
+                    pin.close();
+                }
+            }
+
+            if(canAdd){
+                toReturn.add(toAdd);
+            }
+        }
+
+        in.close();
+        return toReturn;
+    }
+
+    public static Recipe objectFromString(String src){
+
+        Scanner in = new Scanner(src);
+        Recipe toReturn = null;
+
+        //TODO refactor
+        if (in.hasNext()){
+            String toProcess = in.next().trim();
+
+            if(toProcess.matches( "(\\w *)+")){
+                try {
+                    Connection con = DBManager.getInstance().getConnection();
+                    int ingID = new Ingredient(toProcess).getIDfromDB(con);
+                    if(ingID > ID_UNUSED){
+                        toReturn = new Recipe(ID_UNUSED, ingID);
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            else if (toProcess.matches("(\\w *)+( {1}/ \\d+)")){
+                Scanner pin = new Scanner(toProcess).useDelimiter("/");
+
+                try {
+                    Connection con = DBManager.getInstance().getConnection();
+
+                    String ingredientName = pin.next().trim();
+                    int ingID = new Ingredient(ingredientName).getIDfromDB(con);
+
+                    if( ingID > ID_UNUSED){
+                        toReturn = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
+                    }
+                } catch (SQLException  e){
+                    e.printStackTrace();
+                } finally {
+                    pin.close();
+                }
+            }
+        }
+
+        in.close();
+        return toReturn;
+    }
+
     @Override
-    public int getDBID(Connection connection) throws SQLException {
+    public void addToDB (Connection con) throws SQLException {
+
+        if(canAdd(con)){
+            String table = getTable();
+            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
+            insertStatement.setInt(1, productID);
+            insertStatement.setInt(2, ingredientID);
+            insertStatement.setInt(3, qty);
+
+            try {
+                insertStatement.execute();
+            } catch (SQLException sex) {
+                sex.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public int getIDfromDB(Connection connection) throws SQLException {
         int idToGet = ID_UNUSED;
 
         if(connection != null){
@@ -52,7 +175,7 @@ public class Recipe implements DBObject {
         boolean canAdd = false;
 
         try {
-            if(getDBID(con) != ID_UNUSED){
+            if(getIDfromDB(con) != ID_UNUSED){
                 canAdd = true;
             }
 
@@ -64,132 +187,6 @@ public class Recipe implements DBObject {
     }
 
     @Override
-    public void addToDB (Connection con) throws SQLException {
-
-        if(canAdd(con)){
-            String table = getTable();
-            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
-            insertStatement.setInt(1, productID);
-            insertStatement.setInt(2, ingredientID);
-            insertStatement.setInt(3, qty);
-
-            try {
-                insertStatement.execute();
-            } catch (SQLException sex) {
-                sex.printStackTrace();
-            }
-
-        }
-    }
-
-    @Override
-    public ArrayList<DBObject> loadFromFile(String path) {
-        //TODO implement
-        return null;
-    }
-
-    public static ArrayList<Recipe> arrayFromString(String src){
-        ArrayList<Recipe> toReturn = new ArrayList<>();
-
-        Scanner in = new Scanner(src).useDelimiter(", *");
-        while (in.hasNext()){
-            String toProcess = in.next().trim();
-
-            boolean canAdd = false;
-            Recipe toAdd = null;
-
-            //TODO refactor
-
-            if(toProcess.matches( "(\\w *)+")){
-                try {
-                    Connection con = DBManager.getInstance().getConnection();
-                    int ingID = new Ingredient(toProcess).getDBID(con);
-                    if(ingID > ID_UNUSED){
-                        toAdd = new Recipe(ID_UNUSED, ingID);
-                        canAdd = true;
-                    }
-                } catch (SQLException | ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-            }
-
-            else if (toProcess.matches("(\\w *)+( {1}/ \\d+)")){
-                Scanner pin = new Scanner(toProcess).useDelimiter("/");
-
-                int ingID;
-
-                try {
-                    Connection con = DBManager.getInstance().getConnection();
-
-                    String ingredientName = pin.next().trim();
-                    ingID = new Ingredient(ingredientName).getDBID(con);
-
-                    if( ingID > ID_UNUSED){
-                        toAdd = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
-                        canAdd = true;
-                    }
-                } catch (SQLException | ClassNotFoundException e){
-                    e.printStackTrace();
-                } finally {
-                    pin.close();
-                }
-            }
-
-            if(canAdd){
-                toReturn.add(toAdd);
-            }
-        }
-
-        in.close();
-        return toReturn;
-    }
-
-    public static Recipe objectFromString(String src){
-
-        Scanner in = new Scanner(src);
-        Recipe toReturn = null;
-
-        //TODO refactor
-        if (in.hasNext()){
-            String toProcess = in.next().trim();
-
-            if(toProcess.matches( "(\\w *)+")){
-                try {
-                    Connection con = DBManager.getInstance().getConnection();
-                    int ingID = new Ingredient(toProcess).getDBID(con);
-                    if(ingID > ID_UNUSED){
-                        toReturn = new Recipe(ID_UNUSED, ingID);
-                    }
-                } catch (SQLException | ClassNotFoundException e){
-                    e.printStackTrace();
-                }
-            }
-
-            else if (toProcess.matches("(\\w *)+( {1}/ \\d+)")){
-                Scanner pin = new Scanner(toProcess).useDelimiter("/");
-
-                try {
-                    Connection con = DBManager.getInstance().getConnection();
-
-                    String ingredientName = pin.next().trim();
-                    int ingID = new Ingredient(ingredientName).getDBID(con);
-
-                    if( ingID > ID_UNUSED){
-                        toReturn = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
-                    }
-                } catch (SQLException | ClassNotFoundException e){
-                    e.printStackTrace();
-                } finally {
-                    pin.close();
-                }
-            }
-        }
-
-        in.close();
-        return toReturn;
-    }
-
-    @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
         Recipe toBuild = null;
         if(id > ID_UNUSED && connection != null){
@@ -198,14 +195,15 @@ public class Recipe implements DBObject {
                     "SELECT ROWID, * FROM " + getTable() + " WHERE ROWID = ?");
             query.setInt(1, id);
 
-            try(ResultSet rs = query.executeQuery()){
-
-                toBuild = new Recipe(
-                        rs.getInt(1),
-                        rs.getInt("productID"),
-                        rs.getInt("ingredientID"),
-                        rs.getInt("qty")
-                );
+            try(ResultSet rs = query.executeQuery()) {
+                while (rs.next()) {
+                    toBuild = new Recipe(
+                            rs.getInt(1),
+                            rs.getInt("productID"),
+                            rs.getInt("ingredientID"),
+                            rs.getInt("qty")
+                    );
+                }
             }
         }
 

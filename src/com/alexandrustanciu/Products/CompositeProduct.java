@@ -1,4 +1,6 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,9 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public abstract class CompositeProduct extends Product {
-
-    @Override
-    public abstract ArrayList<DBObject> loadFromFile(String path);
 
     @Override
     protected void insertTypeEntry() {
@@ -23,7 +22,7 @@ public abstract class CompositeProduct extends Product {
             int typeId = insertStatement.executeUpdate();
             setType(typeId);
 
-        } catch (SQLException | ClassNotFoundException ex){
+        } catch (SQLException ex){
             ex.printStackTrace();
         }
     }

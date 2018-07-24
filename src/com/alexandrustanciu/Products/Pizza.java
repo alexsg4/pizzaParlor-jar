@@ -1,4 +1,8 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
+import com.alexandrustanciu.DB.DBObject;
+import com.alexandrustanciu.FileLoadable;
 
 import java.io.*;
 import java.sql.Connection;
@@ -7,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-class Pizza extends CompositeProduct{
+public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
     @Override
     public final boolean canAdd(Connection con) throws SQLException {
@@ -33,7 +37,7 @@ class Pizza extends CompositeProduct{
     }
 
     @Override
-    public void addToDB(Connection con) throws SQLException, ClassNotFoundException {
+    public void addToDB(Connection con) throws SQLException {
 
         //TODO update recipes for existing pizzas
 
@@ -43,7 +47,8 @@ class Pizza extends CompositeProduct{
 
             //Add item with name
             PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);");
+                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);"
+            );
 
             addStatement.setString(1, this.name);
             addStatement.setInt(2, this.type);
@@ -56,7 +61,7 @@ class Pizza extends CompositeProduct{
                 sex.printStackTrace();
             }
 
-            this.id = getDBID(con);
+            this.id = getIDfromDB(con);
 
             for (Recipe entry : this.recipe){
 
@@ -112,6 +117,51 @@ class Pizza extends CompositeProduct{
         return loadedPizzas;
     }
 
+    @Override
+    public ArrayList<DBObject> loadFromFile(File file) {
+        ArrayList<DBObject> loadedPizzas = new ArrayList<>();
+
+        try {
+            BufferedReader fin = new BufferedReader(new FileReader(file));
+
+            try {
+                String lineToProcess;
+                while ( (lineToProcess = fin.readLine()) != null) {
+
+                    String titleLine;
+                    String recipeLine;
+
+                    titleLine = lineToProcess;
+
+                    if (titleLine.matches("^\\$ ([a-zA-Z&] *)+") && (lineToProcess = fin.readLine()) != null) {
+
+                        titleLine = titleLine.replaceFirst("\\$ ", "").trim();
+
+                        //TODO check recipe line matches a recipe
+                        recipeLine = lineToProcess;
+
+                        ArrayList<Recipe> recipeToSet = Recipe.arrayFromString(recipeLine);
+
+                        Pizza toAdd = new Pizza(titleLine);
+                        toAdd.setRecipe(recipeToSet);
+                        loadedPizzas.add(toAdd);
+
+                    }
+                }
+
+                fin.close();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        } catch (FileNotFoundException fex) {
+            fex.printStackTrace();
+        }
+
+        return loadedPizzas;
+    }
+
     //Side effect: expects all pizzas have a recipe
     @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
@@ -124,7 +174,7 @@ class Pizza extends CompositeProduct{
 
 
             try (ResultSet rs = query.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     toBuild = new Pizza(
                             rs.getInt("id"),
                             rs.getString("name"),

@@ -1,34 +1,45 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.DB;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DBManager {
     private static final String mDatabase = "main.db";
-    private static Connection mConnection;
+    private static Connection mConnection = null;
     private static DBManager mInstance;
 
-    private void establishConnection() throws ClassNotFoundException, SQLException {
-        // sqlite driver
-        Class.forName("org.sqlite.JDBC");
-        // database path, if it's new database, it will be created in the project folder
-        mConnection = DriverManager.getConnection("jdbc:sqlite:" + mDatabase);
+    static {
+        try {
+            mInstance = new DBManager();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        if(mConnection == null) { establishConnection(); }
-        return mConnection;
+    private DBManager() throws SQLException {
+        this.getConnection();
     }
 
-    private DBManager() throws ClassNotFoundException, SQLException {
-        if(mConnection == null ) { establishConnection(); }
-    }
-
-    public static DBManager getInstance() throws ClassNotFoundException, SQLException {
+    public static DBManager getInstance() throws SQLException {
         if (mInstance == null) {
             mInstance = new DBManager();
         }
         return mInstance;
+    }
+
+    private void establishConnection(){
+        try {
+            // sqlite driver
+            Class.forName("org.sqlite.JDBC");
+            mConnection = DriverManager.getConnection("jdbc:sqlite:" + mDatabase);
+        } catch (SQLException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    public Connection getConnection() throws SQLException {
+        if(mConnection == null || mConnection.isClosed()) { establishConnection(); }
+        return mConnection;
     }
 
     public void addDBObject(DBObject toAdd) throws SQLException, ClassNotFoundException {
@@ -44,7 +55,7 @@ public class DBManager {
     }
 
     //Dangerous. TODO remove after testing is complete.
-    public void clearDB() throws SQLException{
+    private void clearDB() throws SQLException{
 
         PreparedStatement delStat = mConnection.prepareStatement("delete from \"Ingredients\";");
         delStat.execute();
@@ -57,7 +68,7 @@ public class DBManager {
     }
 
     public int getDBObjectID(DBObject object) throws SQLException, ClassNotFoundException {
-        return object.getDBID(mConnection);
+        return object.getIDfromDB(mConnection);
     }
 
     public DBObject buildDBObjFromID(DBObject genericObject, int id) throws SQLException, ClassNotFoundException {

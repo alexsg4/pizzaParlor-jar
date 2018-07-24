@@ -1,4 +1,6 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,90 +20,88 @@ public abstract class Product extends PricedItem {
 
     protected int type = ID_UNUSED;
 
-    protected void setType(int type){
-        if(type > 0)
-        {
+    protected void setType(int type) {
+        if (type > 0) {
             this.type = type;
         }
     }
 
-    protected Product()
-    {
+    protected Product() {
         super();
-        if(!hasTypeEntry()){
+        if (!hasTypeEntry()) {
             insertTypeEntry();
         }
     }
 
-    protected Product(int type)
-    {
+    protected Product(int type) {
         super();
         setType(type);
     }
 
-    protected Product(String name, double unitPrice){
+    protected Product(String name, double unitPrice) {
         super(name, unitPrice);
-        if(!hasTypeEntry()){
+        if (!hasTypeEntry()) {
             insertTypeEntry();
         }
     }
 
-    protected Product(String name, int type, double unitPrice){
+    protected Product(String name, int type, double unitPrice) {
         super(name, unitPrice);
         setType(type);
     }
 
-    protected Product(String name){
-       super(name);
-        if(!hasTypeEntry()){
+    protected Product(String name) {
+        super(name);
+        if (!hasTypeEntry()) {
             insertTypeEntry();
         }
     }
 
-    public int getType(){ return type; }
+    public int getType() {
+        return type;
+    }
 
     public abstract String getTypeName();
 
-    private boolean hasTypeEntry(){
+    private boolean hasTypeEntry() {
         boolean hasEntry = false;
 
-        try{
+        try {
             Connection con = DBManager.getInstance().getConnection();
             PreparedStatement checkStatement = con.prepareStatement(
-              "SELECT ROWID FROM ProductTypes WHERE name = ?;"
+                    "SELECT ROWID FROM ProductTypes WHERE name = ?;"
             );
             checkStatement.setString(1, getTypeName());
 
             //String entriesLine = checkStatement.executeQuery().getString(1);
             ResultSet rs = checkStatement.executeQuery();
             ArrayList<String> list = new ArrayList<>();
-            while(rs.next()){
+            while (rs.next()) {
                 list.add(rs.getString(1));
             }
 
             hasEntry = (list.size() > 0);
 
             //set correct product entry
-            if(hasEntry)
-            {
+            if (hasEntry) {
                 int lastEntry = 0;
                 try {
                     lastEntry = Integer.parseInt(list.get(list.size() - 1));
-                } catch (IllegalFormatConversionException ex){
+                } catch (IllegalFormatConversionException ex) {
                     ex.printStackTrace();
                 }
                 setType(lastEntry);
             }
 
-        } catch (SQLException | ClassNotFoundException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
         return hasEntry;
     }
 
-    protected void insertTypeEntry(){
-        try{
+    protected void insertTypeEntry() {
+        try {
             Connection con = DBManager.getInstance().getConnection();
             PreparedStatement insertStatement = con.prepareStatement(
                     "INSERT INTO " + TABLE_TYPES + "(name) VALUES (?);"
@@ -111,7 +111,7 @@ public abstract class Product extends PricedItem {
 
             setType(typeID);
 
-        } catch (SQLException | ClassNotFoundException ex){
+        } catch (SQLException  ex) {
             ex.printStackTrace();
         }
     }

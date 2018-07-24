@@ -1,10 +1,11 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 abstract class PricedItem implements DBObject {
 
@@ -12,13 +13,10 @@ abstract class PricedItem implements DBObject {
     public abstract String getTable();
 
     @Override
-    public abstract ArrayList<DBObject> loadFromFile(String path);
-
-    @Override
     public abstract void addToDB(Connection con) throws SQLException, ClassNotFoundException;
 
     @Override
-    public int getDBID(Connection connection) throws SQLException{
+    public int getIDfromDB(Connection connection) throws SQLException{
         int idToGet = ID_UNUSED;
 
         String table = getTable();

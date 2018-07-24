@@ -41,6 +41,11 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
