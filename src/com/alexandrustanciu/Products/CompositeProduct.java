@@ -22,7 +22,7 @@ public abstract class CompositeProduct extends Product {
             int typeId = insertStatement.executeUpdate();
             setType(typeId);
 
-        } catch (SQLException | ClassNotFoundException ex){
+        } catch (SQLException ex){
             ex.printStackTrace();
         }
     }

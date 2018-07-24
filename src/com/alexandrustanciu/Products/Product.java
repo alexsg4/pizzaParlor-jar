@@ -93,7 +93,7 @@ public abstract class Product extends PricedItem {
                 setType(lastEntry);
             }
 
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
@@ -111,7 +111,7 @@ public abstract class Product extends PricedItem {
 
             setType(typeID);
 
-        } catch (SQLException | ClassNotFoundException ex) {
+        } catch (SQLException  ex) {
             ex.printStackTrace();
         }
     }

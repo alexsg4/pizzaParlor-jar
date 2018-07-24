@@ -41,7 +41,7 @@ public class Recipe implements DBObject {
                         toAdd = new Recipe(ID_UNUSED, ingID);
                         canAdd = true;
                     }
-                } catch (SQLException | ClassNotFoundException e){
+                } catch (SQLException  e){
                     e.printStackTrace();
                 }
             }
@@ -61,7 +61,7 @@ public class Recipe implements DBObject {
                         toAdd = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
                         canAdd = true;
                     }
-                } catch (SQLException | ClassNotFoundException e){
+                } catch (SQLException e){
                     e.printStackTrace();
                 } finally {
                     pin.close();
@@ -93,7 +93,7 @@ public class Recipe implements DBObject {
                     if(ingID > ID_UNUSED){
                         toReturn = new Recipe(ID_UNUSED, ingID);
                     }
-                } catch (SQLException | ClassNotFoundException e){
+                } catch (SQLException e){
                     e.printStackTrace();
                 }
             }
@@ -110,7 +110,7 @@ public class Recipe implements DBObject {
                     if( ingID > ID_UNUSED){
                         toReturn = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
                     }
-                } catch (SQLException | ClassNotFoundException e){
+                } catch (SQLException  e){
                     e.printStackTrace();
                 } finally {
                     pin.close();
