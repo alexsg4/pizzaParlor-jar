@@ -57,7 +57,7 @@ public class DBManager {
     }
 
     public int getDBObjectID(DBObject object) throws SQLException, ClassNotFoundException {
-        return object.getDBID(mConnection);
+        return object.getIDfromDB(mConnection);
     }
 
     public DBObject buildDBObjFromID(DBObject genericObject, int id) throws SQLException, ClassNotFoundException {

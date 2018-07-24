@@ -131,7 +131,7 @@ public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
             query.setInt(1, id);
 
             try(ResultSet rs = query.executeQuery()){
-                if(rs.next()) {
+                while(rs.next()) {
                     toBuild = new Ingredient(
                             rs.getInt("id"),
                             rs.getString("name"),

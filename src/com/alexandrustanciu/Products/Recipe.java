@@ -21,70 +21,6 @@ public class Recipe implements DBObject {
         return "Recipes";
     }
 
-    @Override
-    public int getDBID(Connection connection) throws SQLException {
-        int idToGet = ID_UNUSED;
-
-        if(connection != null){
-            String table = getTable();
-
-            if(!table.equals(TABLE_UNUSED)){
-                PreparedStatement getIDQuery = connection.prepareStatement(
-                        "SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?"
-                );
-                getIDQuery.setInt(1, productID);
-                getIDQuery.setInt(2, ingredientID);
-
-                try(ResultSet rs = getIDQuery.executeQuery()) {
-                    if (rs.next()) {
-                        String idLine = rs.getString(1);
-                        if (idLine.matches("\\d+")) {
-                            idToGet = Integer.parseInt(idLine);
-                        }
-                    }
-                }
-            }
-        }
-
-        return idToGet;
-    }
-
-    @Override
-    public boolean canAdd(Connection con) {
-
-        boolean canAdd = false;
-
-        try {
-            if(getDBID(con) != ID_UNUSED){
-                canAdd = true;
-            }
-
-        } catch (SQLException ex){
-            ex.printStackTrace();
-        }
-
-        return !canAdd;
-    }
-
-    @Override
-    public void addToDB (Connection con) throws SQLException {
-
-        if(canAdd(con)){
-            String table = getTable();
-            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
-            insertStatement.setInt(1, productID);
-            insertStatement.setInt(2, ingredientID);
-            insertStatement.setInt(3, qty);
-
-            try {
-                insertStatement.execute();
-            } catch (SQLException sex) {
-                sex.printStackTrace();
-            }
-
-        }
-    }
-
     public static ArrayList<Recipe> arrayFromString(String src){
         ArrayList<Recipe> toReturn = new ArrayList<>();
 
@@ -100,7 +36,7 @@ public class Recipe implements DBObject {
             if(toProcess.matches( "(\\w *)+")){
                 try {
                     Connection con = DBManager.getInstance().getConnection();
-                    int ingID = new Ingredient(toProcess).getDBID(con);
+                    int ingID = new Ingredient(toProcess).getIDfromDB(con);
                     if(ingID > ID_UNUSED){
                         toAdd = new Recipe(ID_UNUSED, ingID);
                         canAdd = true;
@@ -119,7 +55,7 @@ public class Recipe implements DBObject {
                     Connection con = DBManager.getInstance().getConnection();
 
                     String ingredientName = pin.next().trim();
-                    ingID = new Ingredient(ingredientName).getDBID(con);
+                    ingID = new Ingredient(ingredientName).getIDfromDB(con);
 
                     if( ingID > ID_UNUSED){
                         toAdd = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
@@ -153,7 +89,7 @@ public class Recipe implements DBObject {
             if(toProcess.matches( "(\\w *)+")){
                 try {
                     Connection con = DBManager.getInstance().getConnection();
-                    int ingID = new Ingredient(toProcess).getDBID(con);
+                    int ingID = new Ingredient(toProcess).getIDfromDB(con);
                     if(ingID > ID_UNUSED){
                         toReturn = new Recipe(ID_UNUSED, ingID);
                     }
@@ -169,7 +105,7 @@ public class Recipe implements DBObject {
                     Connection con = DBManager.getInstance().getConnection();
 
                     String ingredientName = pin.next().trim();
-                    int ingID = new Ingredient(ingredientName).getDBID(con);
+                    int ingID = new Ingredient(ingredientName).getIDfromDB(con);
 
                     if( ingID > ID_UNUSED){
                         toReturn = new Recipe(ID_UNUSED, ingID, Integer.parseInt(pin.next().trim()));
@@ -187,6 +123,70 @@ public class Recipe implements DBObject {
     }
 
     @Override
+    public void addToDB (Connection con) throws SQLException {
+
+        if(canAdd(con)){
+            String table = getTable();
+            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
+            insertStatement.setInt(1, productID);
+            insertStatement.setInt(2, ingredientID);
+            insertStatement.setInt(3, qty);
+
+            try {
+                insertStatement.execute();
+            } catch (SQLException sex) {
+                sex.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public int getIDfromDB(Connection connection) throws SQLException {
+        int idToGet = ID_UNUSED;
+
+        if(connection != null){
+            String table = getTable();
+
+            if(!table.equals(TABLE_UNUSED)){
+                PreparedStatement getIDQuery = connection.prepareStatement(
+                        "SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?"
+                );
+                getIDQuery.setInt(1, productID);
+                getIDQuery.setInt(2, ingredientID);
+
+                try(ResultSet rs = getIDQuery.executeQuery()) {
+                    if (rs.next()) {
+                        String idLine = rs.getString(1);
+                        if (idLine.matches("\\d+")) {
+                            idToGet = Integer.parseInt(idLine);
+                        }
+                    }
+                }
+            }
+        }
+
+        return idToGet;
+    }
+
+    @Override
+    public boolean canAdd(Connection con) {
+
+        boolean canAdd = false;
+
+        try {
+            if(getIDfromDB(con) != ID_UNUSED){
+                canAdd = true;
+            }
+
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+        return !canAdd;
+    }
+
+    @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
         Recipe toBuild = null;
         if(id > ID_UNUSED && connection != null){
@@ -195,14 +195,15 @@ public class Recipe implements DBObject {
                     "SELECT ROWID, * FROM " + getTable() + " WHERE ROWID = ?");
             query.setInt(1, id);
 
-            try(ResultSet rs = query.executeQuery()){
-
-                toBuild = new Recipe(
-                        rs.getInt(1),
-                        rs.getInt("productID"),
-                        rs.getInt("ingredientID"),
-                        rs.getInt("qty")
-                );
+            try(ResultSet rs = query.executeQuery()) {
+                while (rs.next()) {
+                    toBuild = new Recipe(
+                            rs.getInt(1),
+                            rs.getInt("productID"),
+                            rs.getInt("ingredientID"),
+                            rs.getInt("qty")
+                    );
+                }
             }
         }
 

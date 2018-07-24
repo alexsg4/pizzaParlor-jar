@@ -47,7 +47,8 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
             //Add item with name
             PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);");
+                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);"
+            );
 
             addStatement.setString(1, this.name);
             addStatement.setInt(2, this.type);
@@ -60,7 +61,7 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
                 sex.printStackTrace();
             }
 
-            this.id = getDBID(con);
+            this.id = getIDfromDB(con);
 
             for (Recipe entry : this.recipe){
 
@@ -173,7 +174,7 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
 
             try (ResultSet rs = query.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     toBuild = new Pizza(
                             rs.getInt("id"),
                             rs.getString("name"),
