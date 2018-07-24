@@ -1,10 +1,8 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Orders;
+
+import com.alexandrustanciu.DB.DBObject;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Order implements DBObject {
     private int id = ID_UNUSED;
@@ -18,7 +16,7 @@ public class Order implements DBObject {
     }
 
     @Override
-    public int getDBID(Connection connection) throws SQLException {
+    public int getDBID(Connection connection) {
         return this.id;
     }
 

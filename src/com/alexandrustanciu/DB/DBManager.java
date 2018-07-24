@@ -1,4 +1,4 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.DB;
 
 import java.sql.*;
 import java.util.ArrayList;

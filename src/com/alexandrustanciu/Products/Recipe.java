@@ -1,4 +1,7 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
+import com.alexandrustanciu.DB.DBObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

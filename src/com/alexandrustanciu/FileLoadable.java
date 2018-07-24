@@ -6,7 +6,5 @@ import java.util.ArrayList;
 
 public interface FileLoadable <T> {
     ArrayList<T> loadFromFile(String path);
-
-    //TODO implement
-    ArrayList<T>loadFromFile(File file) throws IOException;
+    ArrayList<T> loadFromFile(File file) throws IOException;
 }

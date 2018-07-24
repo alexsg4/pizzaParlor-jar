@@ -1,4 +1,7 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Orders;
+
+import com.alexandrustanciu.DB.DBObject;
+import com.alexandrustanciu.Products.Pizza;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +22,7 @@ public class OrderItem implements DBObject {
 
     public boolean canAdd(Connection con) throws SQLException{
 
-        //Check if thereis a valid product for this order.
+        //Check if there is a valid product for this order.
         if(con!=null){
             String productTable = Pizza.getGeneric().getTable();
             String orderTable = Order.getGeneric().getTable();
@@ -28,7 +31,7 @@ public class OrderItem implements DBObject {
                     "SELECT COUNT(*) FROM " + productTable + " WHERE id = ?;"
             );
             ps.setInt(1, productID);
-            try(ResultSet rs = ps.executeQuery();){
+            try(ResultSet rs = ps.executeQuery()){
                 if(rs.next()){
                     return (rs.getInt(1) == 0);
                 }
@@ -38,19 +41,19 @@ public class OrderItem implements DBObject {
     }
 
     @Override
-    public int getDBID(Connection connection) throws SQLException, ClassNotFoundException{
+    public int getDBID(Connection connection) {
         return ID_UNUSED;
     }
 
     @Override
-    public void addToDB(Connection connection) throws SQLException, ClassNotFoundException{
+    public void addToDB(Connection connection) throws SQLException {
         if(canAdd(connection)){
             //DO the stuff
         }
     }
 
     @Override
-    public DBObject buildFromID(Connection con, int id) throws SQLException, ClassNotFoundException{
+    public DBObject buildFromID(Connection con, int id) {
         DBObject toBuild = null;
 
 

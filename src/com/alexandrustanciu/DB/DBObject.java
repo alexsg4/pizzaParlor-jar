@@ -1,8 +1,7 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.DB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public interface DBObject{
     int ID_UNUSED = -1;

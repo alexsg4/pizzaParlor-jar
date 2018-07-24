@@ -1,5 +1,10 @@
 package com.alexandrustanciu;
 
+import com.alexandrustanciu.DB.DBManager;
+import com.alexandrustanciu.DB.DBObject;
+import com.alexandrustanciu.Products.Ingredient;
+import com.alexandrustanciu.Products.Pizza;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 

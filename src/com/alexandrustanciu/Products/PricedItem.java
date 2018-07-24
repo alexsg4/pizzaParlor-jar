@@ -1,10 +1,11 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 abstract class PricedItem implements DBObject {
 

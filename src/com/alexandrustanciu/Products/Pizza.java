@@ -1,4 +1,8 @@
-package com.alexandrustanciu;
+package com.alexandrustanciu.Products;
+
+import com.alexandrustanciu.DB.DBManager;
+import com.alexandrustanciu.DB.DBObject;
+import com.alexandrustanciu.FileLoadable;
 
 import java.io.*;
 import java.sql.Connection;
@@ -7,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-class Pizza extends CompositeProduct implements FileLoadable<DBObject>{
+public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
     @Override
     public final boolean canAdd(Connection con) throws SQLException {
@@ -33,7 +37,7 @@ class Pizza extends CompositeProduct implements FileLoadable<DBObject>{
     }
 
     @Override
-    public void addToDB(Connection con) throws SQLException, ClassNotFoundException {
+    public void addToDB(Connection con) throws SQLException {
 
         //TODO update recipes for existing pizzas
 
