@@ -38,14 +38,10 @@ public class Main extends Application {
         root.getStylesheets().add("/css/mainControls.css");
 
         primaryStage.setTitle(APP_TITLE);
-
-        Scene mainScene = new Scene(root, 500, 450);
-
-        primaryStage.setScene(mainScene);
+        primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
+
     }
-
-
 
     private static void loadPizzaIngredients(DBManager manager){
         Ingredient dummyIngredient = Ingredient.getGeneric();
