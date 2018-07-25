@@ -1,63 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Polygon?>
-<?import java.lang.*?>
-<HBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.162-ea">
+<?import javafx.scene.shape.Ellipse?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8.0.162-ea" fx:controller="com.alexandrustanciu.UControls.CMain">
    <children>
-      <VBox prefHeight="400.0" prefWidth="237.0">
+      <VBox id="sidebar" alignment="TOP_CENTER" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Pane nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="100.0">
+            <Pane id="logoPanel" minHeight="100.0" minWidth="100.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="100.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
                <children>
-                  <Polygon fill="DODGERBLUE" layoutX="47.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE">
-                    <points>
-                      <Double fx:value="-50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="0.0" />
-                      <Double fx:value="-60.0" />
-                    </points>
-                  </Polygon>
+                  <Ellipse fill="DODGERBLUE" layoutX="50.0" layoutY="50.0" radiusX="50.0" radiusY="50.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </Pane>
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="145.0" styleClass="btn_sidebar" text="Button" />
-            <Button layoutX="10.0" layoutY="110.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="145.0" styleClass="btn_sidebar" text="Button" />
-            <Button layoutX="10.0" layoutY="174.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="145.0" styleClass="btn_sidebar" text="Button" />
-            <Button layoutX="10.0" layoutY="142.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="145.0" styleClass="btn_sidebar" text="Button" />
+            <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" styleClass="btn_sidebar" text="Button" />
+            <Button layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" mnemonicParsing="false" styleClass="btn_sidebar" text="Button" />
+            <Button layoutX="10.0" layoutY="142.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" mnemonicParsing="false" styleClass="btn_sidebar" text="Button" />
+            <Button layoutX="10.0" layoutY="174.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="100.0" mnemonicParsing="false" styleClass="btn_sidebar" text="Button" />
          </children>
       </VBox>
-      <BorderPane prefHeight="400.0" prefWidth="650.0">
-         <center>
-            <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TableView>
-         </center>
-         <top>
-            <MenuBar nodeOrientation="LEFT_TO_RIGHT" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-         </top>
-      </BorderPane>
+      <Pane id="mainPanel" fx:id="mainPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="500.0">
+         <children>
+            <TableView fx:id="ingTable" prefHeight="400.0" prefWidth="500.0" />
+         </children></Pane>
    </children>
 </HBox>

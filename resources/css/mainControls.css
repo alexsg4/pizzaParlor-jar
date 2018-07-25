@@ -1,5 +1,33 @@
-.btn_sidebar{
-    -fx-font: 16px "Sans";
+*{
+    -color-bg-main: #CEDEFC;
+    -color-bg-secondary: #B3C4E5;
+    -color-accent: #FF9225;
+}
+
+#sidebar{
     -fx-margin: 0;
-    -fx-background-color: #CCFF99;
-};
+    -fx-background-color: -color-bg-secondary;
+    -fx-text-fill: black;
+}
+
+#mainPanel{
+    -fx-background-color: -color-bg-main;
+}
+
+#logoPanel{
+    -fx-background-color: -color-accent;
+    -fx-padding: 10;
+    -fx-margin: 0;
+}
+
+.btn_sidebar{
+    -fx-margin: 0;
+    -fx-font: 16px "Sans";
+    -fx-background-color: -color-bg-secondary;
+    -fx-text-fill: black;
+}
+
+.btn_sidebar:hover{
+    -fx-background-color: -color-accent;
+    -fx-text-fill: white;
+}
