@@ -1,6 +1,7 @@
 package com.alexandrustanciu.Products;
 
 import com.alexandrustanciu.DB.DBManager;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,13 +19,17 @@ public abstract class Product extends PricedItem {
         return "Products";
     }
 
-    protected int type = ID_UNUSED;
+    protected SimpleIntegerProperty type = new SimpleIntegerProperty(ID_UNUSED);
 
-    protected void setType(int type) {
+    public int getType() { return type.get(); }
+
+    public void setType(int type) {
         if (type > 0) {
-            this.type = type;
+            this.type.set(type);
         }
     }
+
+    public abstract String getTypeName();
 
     protected Product() {
         super();
@@ -56,12 +61,6 @@ public abstract class Product extends PricedItem {
             insertTypeEntry();
         }
     }
-
-    public int getType() {
-        return type;
-    }
-
-    public abstract String getTypeName();
 
     private boolean hasTypeEntry() {
         boolean hasEntry = false;

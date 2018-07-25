@@ -2,6 +2,9 @@ package com.alexandrustanciu.Products;
 
 import com.alexandrustanciu.DB.DBObject;
 import com.alexandrustanciu.FileLoadable;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.io.*;
 import java.sql.Connection;
@@ -14,60 +17,56 @@ import java.util.Scanner;
 
 public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
 
-    private boolean isVeg = false;
-    private String baseUnit = "g";
-    private int productType = ID_UNUSED;
+    private SimpleBooleanProperty isVeg = new SimpleBooleanProperty(false);
 
-    @Override
-    public final boolean canAdd(Connection con) throws SQLException {
-        boolean canAdd = false;
-        if (con != null && productType > ID_UNUSED) {
-            // Ingredients have a UNIQUE name constraint
-            // Check name is not used
-            String table = getTable();
-            PreparedStatement checkNameStatement = con.prepareStatement(
-                    "SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?) AND productType = ?; ");
-            checkNameStatement.setString(1, this.name);
-            checkNameStatement.setInt(2, this.productType);
+    private SimpleStringProperty baseUnit = new SimpleStringProperty("g");
 
-            try (ResultSet rs = checkNameStatement.executeQuery()){
-                //count rows with the same name
-                if (rs.next()){
-                    if(rs.getInt(1) == 0){ canAdd = true; }
-                }
-            } catch (SQLException sex) {
-                System.out.println(sex.getMessage());
-            }
-        }
-        return canAdd;
+    private SimpleIntegerProperty productType = new SimpleIntegerProperty(ID_UNUSED);
+
+    private Ingredient(int id, String name, double unitPrice, boolean isVeg) {
+        super(name, unitPrice);
+        setId(id);
+        setIsVeg(isVeg);
     }
+
+    private Ingredient(int id, String name, double unitPrice, boolean isVeg, String baseUnit) {
+        super(name, unitPrice);
+        setId(id);
+        setIsVeg(isVeg);
+        setBaseUnit(baseUnit);
+    }
+
+    private Ingredient(int id, String name, int productType, double unitPrice, boolean isVeg, String baseUnit) {
+        super(name, unitPrice);
+        setId(id);
+        setProductType(productType);
+        setUnitPrice(unitPrice);
+        setIsVeg(isVeg);
+        setBaseUnit(baseUnit);
+    }
+
+    private Ingredient(String name, double unitPrice, boolean isVeg, String baseUnit) {
+        super(name, unitPrice);
+        setIsVeg(isVeg);
+        setBaseUnit(baseUnit);
+    }
+
+    private Ingredient(String name, double unitPrice, boolean isVeg) {
+        super(name, unitPrice);
+        setIsVeg(isVeg);
+    }
+
+    public boolean getIsVeg() { return isVeg.get(); }
+
+    public void setIsVeg(boolean isVeg){ this.isVeg.set(isVeg); }
 
     @Override
     public final String getTable(){
         return "Ingredients";
     }
 
-    @Override
-    public final void addToDB(Connection con) throws SQLException {
-
-        if (canAdd(con)) {
-            String table = getTable();
-            PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + table + " (name, productType, unitPrice, isVeg, unit) VALUES (?, ?, ?, ?, ?);"
-            );
-
-            addStatement.setString(1, this.name);
-            addStatement.setInt(2, this.productType);
-            addStatement.setDouble(3, this.unitPrice);
-            addStatement.setBoolean(4, this.isVeg);
-            addStatement.setString(5, this.baseUnit);
-
-            try {
-                addStatement.execute();
-            } catch (SQLException sex) {
-                System.out.println(sex.getMessage());
-            }
-        }
+    public String getBaseUnit() {
+        return baseUnit.getValue();
     }
 
     @Override
@@ -121,7 +120,6 @@ public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
         return loadedIngredients;
     }
 
-
     @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
         Ingredient toBuild = null;
@@ -154,36 +152,61 @@ public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
         super(name);
     }
 
-    private Ingredient(int id, String name, double price, boolean veg) {
-        super(name, price);
-        this.id = id;
-        this.isVeg = veg;
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit.setValue(baseUnit);
     }
 
-    private Ingredient(int id, String name, double price, boolean veg, String unit) {
-        super(name, price);
-        this.id = id;
-        this.isVeg = veg;
-        this.baseUnit = unit;
+    public int getProductType(){ return productType.get(); }
+
+    public void setProductType(int productType){
+        this.productType.set(productType > ID_UNUSED ? productType : ID_UNUSED);
     }
 
-    private Ingredient(int id, String name, int productType, double price, boolean veg, String unit) {
-        super(name, price);
-        this.id = id;
-        this.productType = productType;
-        this.isVeg = veg;
-        this.baseUnit = unit;
+    @Override
+    public final boolean canAdd(Connection con) throws SQLException {
+        boolean canAdd = false;
+        if (con != null && getProductType() > ID_UNUSED) {
+            // Ingredients have a UNIQUE name constraint
+            // Check name is not used
+            String table = getTable();
+            PreparedStatement checkNameStatement = con.prepareStatement(
+                    "SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?) AND productType = ?; ");
+            checkNameStatement.setString(1, getName());
+            checkNameStatement.setInt(2, getProductType());
+
+            try (ResultSet rs = checkNameStatement.executeQuery()){
+                //count rows with the same name
+                if (rs.next()){
+                    if(rs.getInt(1) == 0){ canAdd = true; }
+                }
+            } catch (SQLException sex) {
+                System.out.println(sex.getMessage());
+            }
+        }
+        return canAdd;
     }
 
-    private Ingredient(String name, double price, boolean veg, String unit) {
-        super(name, price);
-        this.isVeg = veg;
-        this.baseUnit = unit;
-    }
+    @Override
+    public final void addToDB(Connection con) throws SQLException {
 
-    private Ingredient(String name, double price, boolean veg) {
-        super(name, price);
-        this.isVeg = veg;
+        if (canAdd(con)) {
+            String table = getTable();
+            PreparedStatement addStatement = con.prepareStatement(
+                    "INSERT INTO " + table + " (name, productType, unitPrice, isVeg, unit) VALUES (?, ?, ?, ?, ?);"
+            );
+
+            addStatement.setString(1, getName());
+            addStatement.setInt(2, getProductType());
+            addStatement.setDouble(3, getUnitPrice());
+            addStatement.setBoolean(4, getIsVeg());
+            addStatement.setString(5, getBaseUnit());
+
+            try {
+                addStatement.execute();
+            } catch (SQLException sex) {
+                System.out.println(sex.getMessage());
+            }
+        }
     }
 
     public static Ingredient fromString(String str) {
@@ -222,18 +245,6 @@ public class Ingredient extends PricedItem implements FileLoadable<DBObject> {
     }
 
     public static Ingredient getGeneric() { return new Ingredient(); }
-
-    public boolean isVeg() {
-        return this.isVeg;
-    }
-
-    public String getBaseUnit() {
-        return baseUnit;
-    }
-
-    public void setProductType(int productType){
-        this.productType = productType > ID_UNUSED ? productType : ID_UNUSED;
-    }
 
 }
 

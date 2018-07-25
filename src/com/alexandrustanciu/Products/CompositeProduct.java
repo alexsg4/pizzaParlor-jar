@@ -28,6 +28,7 @@ public abstract class CompositeProduct extends Product {
     }
 
     protected boolean hasRecipe = false;
+
     protected ArrayList<Recipe> recipe;
 
     protected CompositeProduct()
@@ -55,7 +56,7 @@ public abstract class CompositeProduct extends Product {
 
     protected void calculatePrice() {
         if (hasRecipe) {
-            unitPrice = 0.;
+            double unitPriceToSet = 0.;
 
             for (Recipe rec : recipe) {
                 Ingredient ingToBuild = null;
@@ -69,9 +70,10 @@ public abstract class CompositeProduct extends Product {
                 }
 
                 if(ingToBuild != null){
-                    unitPrice += ingToBuild.getUnitPrice() * rec.getQty();
+                    unitPriceToSet += ingToBuild.getUnitPrice() * rec.getQty();
                 }
             }
+            setUnitPrice(unitPriceToSet);
         }
     }
 

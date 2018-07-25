@@ -2,6 +2,7 @@ package com.alexandrustanciu.Orders;
 
 import com.alexandrustanciu.DB.DBObject;
 import com.alexandrustanciu.Products.Pizza;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +13,51 @@ public class OrderItem implements DBObject {
 
     static final String SIZE_TABLE = "OrderSizes";
 
-    private int id = ID_UNUSED;
-    private int orderID = ID_UNUSED;
-    private int productID = ID_UNUSED;
-    private int sizeID = ID_UNUSED;
+    private SimpleIntegerProperty id = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty orderID = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty productID = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty sizeID = new SimpleIntegerProperty(ID_UNUSED);
+
+    static OrderItem getGeneric(){ return new OrderItem(); }
+
+    public int getID() { return id.get(); }
+
+    void setID(int id) {
+        if(id > ID_UNUSED){
+            this.id.set(id);
+        }
+    }
+
+    public int getOrderID() { return id.get(); }
+
+    void setOrderID(int orderID){
+        if(orderID > ID_UNUSED){
+            this.orderID.set(orderID);
+        }
+    }
+
+    int getProductID(){ return productID.get(); }
+
+    void setProductID(int productID){
+        if(productID > ID_UNUSED){
+            this.productID.set(productID);
+        }
+    }
+
+    int getSizeID(){
+        return sizeID.get();
+    }
 
     @Override
     public String getTable() { return "OrderList"; }
 
     OrderItem(){ }
+
+    void setSizeID(int sizeID){
+        if(sizeID > ID_UNUSED) {
+            this.sizeID.set(sizeID);
+        }
+    }
 
     public OrderItem(int productID, int sizeID){
         setProductID(productID);
@@ -34,8 +71,6 @@ public class OrderItem implements DBObject {
         setSizeID(sizeID);
     }
 
-    static OrderItem getGeneric(){ return new OrderItem(); }
-
     public boolean canAdd(Connection con) throws SQLException{
 
         //Check if there is a valid product for this order.
@@ -46,7 +81,7 @@ public class OrderItem implements DBObject {
             PreparedStatement checkProductID = con.prepareStatement(
                     "SELECT COUNT(*) FROM " + productTable + " WHERE id = ?;"
             );
-            checkProductID.setInt(1, productID);
+            checkProductID.setInt(1, getProductID());
             try(ResultSet rs = checkProductID.executeQuery()){
                 if(rs.next()){
                     if(rs.getInt(1) == 0){
@@ -60,7 +95,7 @@ public class OrderItem implements DBObject {
             PreparedStatement checkOrderID = con.prepareStatement(
                     "SELECT COUNT(*) FROM " + orderTable + " WHERE id = ?;"
             );
-            checkOrderID.setInt(1, orderID);
+            checkOrderID.setInt(1, getOrderID());
             try(ResultSet rs = checkOrderID.executeQuery()){
                 if(rs.next()){
                     if(rs.getInt(1) == 0){
@@ -73,7 +108,7 @@ public class OrderItem implements DBObject {
             PreparedStatement checkSize = con.prepareStatement(
                     "SELECT COUNT(*) FROM " + sizeTable + " WHERE id = ?;"
             );
-            checkSize.setInt(1, sizeID);
+            checkSize.setInt(1, getSizeID());
             try(ResultSet rs = checkSize.executeQuery()){
                 if(rs.next()){
                     if(rs.getInt(1) == 0){
@@ -94,9 +129,9 @@ public class OrderItem implements DBObject {
         PreparedStatement getID = connection.prepareStatement(
           "SELECT id FROM " + table + " WHERE orderID = ? AND productID = ? AND size = ?;"
         );
-        getID.setInt(1, this.orderID);
-        getID.setInt(2, this.productID);
-        getID.setInt(3,this.sizeID);
+        getID.setInt(1, getOrderID());
+        getID.setInt(2, getProductID());
+        getID.setInt(3,getSizeID());
 
         try(ResultSet rs = getID.executeQuery()) {
             if(rs.next()){
@@ -114,43 +149,11 @@ public class OrderItem implements DBObject {
             PreparedStatement addStatement = connection.prepareStatement(
                     "INSERT INTO " + table + " (orderID, productID, size) VALUES(?, ?, ?);"
             );
-            addStatement.setInt(1, this.orderID);
-            addStatement.setInt(2, this.productID);
-            addStatement.setInt(3,this.sizeID);
+            addStatement.setInt(1, getOrderID());
+            addStatement.setInt(2, getProductID());
+            addStatement.setInt(3, getSizeID());
 
             addStatement.execute();
-        }
-    }
-
-    void setID(int id) {
-        if(id > ID_UNUSED){
-            this.id = id;
-        }
-    }
-
-    void setOrderID(int orderID){
-        if(orderID > ID_UNUSED){
-            this.orderID = orderID;
-        }
-    }
-
-    int getProductID(){
-        return this.productID;
-    }
-
-    void setProductID(int productID){
-        if(productID > ID_UNUSED){
-            this.productID = productID;
-        }
-    }
-
-    int getSizeID(){
-        return this.sizeID;
-    }
-
-    void setSizeID(int sizeID){
-        if(sizeID > ID_UNUSED) {
-            this.sizeID = sizeID;
         }
     }
 
@@ -184,7 +187,7 @@ public class OrderItem implements DBObject {
         String table = Pizza.getGeneric().getTable();
 
         PreparedStatement ps = con.prepareStatement("SELECT price FROM " + table + " WHERE id = ?;");
-        ps.setInt(1, this.productID);
+        ps.setInt(1, getProductID());
 
         try (ResultSet rs = ps.executeQuery()) {
             if(rs.next()){
@@ -200,7 +203,7 @@ public class OrderItem implements DBObject {
         String table = SIZE_TABLE;
 
         PreparedStatement ps = con.prepareStatement("SELECT priceMod FROM " + table + " WHERE id = ?;");
-        ps.setInt(1, this.sizeID);
+        ps.setInt(1, getSizeID());
 
         try (ResultSet rs = ps.executeQuery()) {
             if(rs.next()){

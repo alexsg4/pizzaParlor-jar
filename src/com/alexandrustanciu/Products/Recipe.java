@@ -2,6 +2,7 @@ package com.alexandrustanciu.Products;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.DB.DBObject;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +12,42 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Recipe implements DBObject {
-    private int id = ID_UNUSED;
-    private int productID = ID_UNUSED;
-    private int ingredientID = ID_UNUSED;
-    private int qty = 1;
+
+    private SimpleIntegerProperty id = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty productID = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty ingredientID = new SimpleIntegerProperty(ID_UNUSED);
+    private SimpleIntegerProperty qty = new SimpleIntegerProperty(1);
+
+
+    private Recipe() { super(); }
+    public Recipe(int productID, int ingredientID){
+        setProductID(productID);
+        setIngredientID(ingredientID);
+    }
+
+    public Recipe(int productID, int ingredientID, int qty){
+        setProductID(productID);
+        setIngredientID(ingredientID);
+        setQty(qty);
+    }
+    private Recipe(int id, int productID, int ingredientID, int qty){
+        setId(id);
+        setProductID(productID);
+        setIngredientID(ingredientID);
+        setQty(qty);
+    }
+
+    public static Recipe getGeneric() { return new Recipe(); }
+
+    public int getId() { return id.get(); }
+
+    public void setId(int id){
+        this.id.set(id >= 0 ? id : ID_UNUSED);
+    }
+
+    public int getProductID(){
+        return productID.get();
+    }
 
     @Override
     public final String getTable() {
@@ -122,51 +155,12 @@ public class Recipe implements DBObject {
         return toReturn;
     }
 
-    @Override
-    public void addToDB (Connection con) throws SQLException {
-
-        if(canAdd(con)){
-            String table = getTable();
-            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
-            insertStatement.setInt(1, productID);
-            insertStatement.setInt(2, ingredientID);
-            insertStatement.setInt(3, qty);
-
-            try {
-                insertStatement.execute();
-            } catch (SQLException sex) {
-                sex.printStackTrace();
-            }
-
-        }
+    public void setProductID(int productID){
+        this.productID.set(productID >= 0 ? productID : ID_UNUSED);
     }
 
-    @Override
-    public int getIDfromDB(Connection connection) throws SQLException {
-        int idToGet = ID_UNUSED;
-
-        if(connection != null){
-            String table = getTable();
-
-            if(!table.equals(TABLE_UNUSED)){
-                PreparedStatement getIDQuery = connection.prepareStatement(
-                        "SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?"
-                );
-                getIDQuery.setInt(1, productID);
-                getIDQuery.setInt(2, ingredientID);
-
-                try(ResultSet rs = getIDQuery.executeQuery()) {
-                    if (rs.next()) {
-                        String idLine = rs.getString(1);
-                        if (idLine.matches("\\d+")) {
-                            idToGet = Integer.parseInt(idLine);
-                        }
-                    }
-                }
-            }
-        }
-
-        return idToGet;
+    public int getIngredientID(){
+        return ingredientID.get();
     }
 
     @Override
@@ -210,52 +204,61 @@ public class Recipe implements DBObject {
         return toBuild;
     }
 
-    private Recipe(int id, int productID, int ingredientID, int qty){
-        this.id = id;
-        this.productID = productID;
-        this.ingredientID = ingredientID;
-        setQty(qty);
+    public void setIngredientID(int ingredientID){
+        this.ingredientID.set(ingredientID >= 0 ? ingredientID : ID_UNUSED);
     }
 
-    private Recipe() { super(); }
-
-    public static Recipe getGeneric() { return new Recipe(); }
-
-    public Recipe(int productID, int ingredientID, int qty){
-        this.productID = productID;
-        this.ingredientID = ingredientID;
-        setQty(qty);
-    }
-
-    public Recipe(int productID, int ingredientID){
-        this.productID = productID;
-        this.ingredientID = ingredientID;
-    }
+    public int getQty(){ return qty.get(); }
 
     private void setQty(int qty) {
-        this.qty = qty > 0 ? qty : 1;
+        this.qty.set(qty > 0 ? qty : 1);
     }
 
-    public void setId(int id){
-        this.id = id >= 0 ? id : ID_UNUSED;
+    @Override
+    public void addToDB (Connection con) throws SQLException {
+
+        if(canAdd(con)){
+            String table = getTable();
+            PreparedStatement insertStatement = con.prepareStatement("INSERT INTO " + table + " VALUES(?, ?, ?)");
+            insertStatement.setInt(1, getProductID());
+            insertStatement.setInt(2, getIngredientID());
+            insertStatement.setInt(3, getQty());
+
+            try {
+                insertStatement.execute();
+            } catch (SQLException sex) {
+                sex.printStackTrace();
+            }
+
+        }
     }
 
-    public void setProductID(int productID){
-        this.productID = productID >= 0 ? productID : ID_UNUSED;
-    }
+    @Override
+    public int getIDfromDB(Connection connection) throws SQLException {
+        int idToGet = ID_UNUSED;
 
-    public void setIngredientID(int ingredientID){
-        this.ingredientID = ingredientID >= 0 ? ingredientID : ID_UNUSED;
-    }
+        if(connection != null){
+            String table = getTable();
 
-    public int getProductID(){
-        return productID;
-    }
+            if(!table.equals(TABLE_UNUSED)){
+                PreparedStatement getIDQuery = connection.prepareStatement(
+                        "SELECT rowid FROM " + table + " WHERE productID = ? AND ingredientID = ?"
+                );
+                getIDQuery.setInt(1, getProductID());
+                getIDQuery.setInt(2, getIngredientID());
 
-    public int getIngredientID(){
-        return ingredientID;
-    }
+                try(ResultSet rs = getIDQuery.executeQuery()) {
+                    if (rs.next()) {
+                        String idLine = rs.getString(1);
+                        if (idLine.matches("\\d+")) {
+                            idToGet = Integer.parseInt(idLine);
+                        }
+                    }
+                }
+            }
+        }
 
-    public int getQty(){ return qty; }
+        return idToGet;
+    }
 
 }

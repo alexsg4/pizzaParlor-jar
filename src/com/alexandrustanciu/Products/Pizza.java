@@ -3,6 +3,7 @@ package com.alexandrustanciu.Products;
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.DB.DBObject;
 import com.alexandrustanciu.FileLoadable;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.*;
 import java.sql.Connection;
@@ -13,63 +14,29 @@ import java.util.ArrayList;
 
 public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
-    @Override
-    public final boolean canAdd(Connection con) throws SQLException {
+    private SimpleBooleanProperty isVeg = new SimpleBooleanProperty();
 
-        boolean canAdd = false;
-        if(con != null && hasRecipe){
-            // Pizzas have a UNIQUE name constraint
-            // Check name is not used
-            String table = getTable();
-            PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
-            checkNameStatement.setString(1, this.name);
-
-            try(ResultSet rs = checkNameStatement.executeQuery()) {
-                //count rows with the same name
-                if (rs.next()){
-                    if(rs.getInt(1) == 0) { canAdd = true; }
-                }
-            } catch (SQLException sex) {
-                System.out.println(sex.getMessage());
-            }
-        }
-        return canAdd;
+    private Pizza(int id, String name, double price, boolean isVeg){
+        super(name, price);
+        setId(id);
+        setIsVeg(isVeg);
     }
 
-    @Override
-    public void addToDB(Connection con) throws SQLException {
-
-        //TODO update recipes for existing pizzas
-
-        if (canAdd(con)) {
-            determineIsVeg();
-            calculatePrice();
-
-            //Add item with name
-            PreparedStatement addStatement = con.prepareStatement(
-                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);"
-            );
-
-            addStatement.setString(1, this.name);
-            addStatement.setInt(2, this.type);
-            addStatement.setDouble(3, this.unitPrice);
-            addStatement.setBoolean(4,this.isVeg);
-
-            try {
-                addStatement.execute();
-            } catch (SQLException sex) {
-                sex.printStackTrace();
-            }
-
-            this.id = getIDfromDB(con);
-
-            for (Recipe entry : this.recipe){
-
-                Recipe recipeEntry = new Recipe(this.id, entry.getIngredientID(), entry.getQty());
-                recipeEntry.addToDB(con);
-            }
-        }
+    private Pizza(int id, String name, int type, double price, boolean isVeg){
+        super(name, type, price);
+        setId(id);
+        setIsVeg(isVeg);
     }
+
+    private Pizza(int id, String name){
+        super(name);
+        setId(id);
+
+        determineIsVeg();
+        calculatePrice();
+    }
+
+    public static Pizza getGeneric(){ return new Pizza(); }
 
     @Override
     public ArrayList<DBObject> loadFromFile(String path) {
@@ -162,6 +129,80 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
         return loadedPizzas;
     }
 
+    public boolean getIsVeg() { return isVeg.get(); }
+
+    @Override
+    public final String getTypeName() {
+        return "Pizza";
+    }
+
+    public void setIsVeg(boolean isVeg) { this.isVeg.set(isVeg); }
+
+    private Pizza(){
+        super();
+    }
+
+    @Override
+    public final boolean canAdd(Connection con) throws SQLException {
+
+        boolean canAdd = false;
+        if(con != null && hasRecipe){
+            // Pizzas have a UNIQUE name constraint
+            // Check name is not used
+            String table = getTable();
+            PreparedStatement checkNameStatement = con.prepareStatement("SELECT COUNT (*) FROM " + table + " WHERE LOWER(name) = LOWER(?); ");
+            checkNameStatement.setString(1, getName());
+
+            try(ResultSet rs = checkNameStatement.executeQuery()) {
+                //count rows with the same name
+                if (rs.next()){
+                    if(rs.getInt(1) == 0) { canAdd = true; }
+                }
+            } catch (SQLException sex) {
+                System.out.println(sex.getMessage());
+            }
+        }
+        return canAdd;
+    }
+
+    public Pizza(String name) { super(name); }
+
+    @Override
+    public void addToDB(Connection con) throws SQLException {
+
+        //TODO update recipes for existing pizzas
+
+        if (canAdd(con)) {
+            determineIsVeg();
+            calculatePrice();
+
+            //Add item with name
+            PreparedStatement addStatement = con.prepareStatement(
+                    "INSERT INTO " + getTable() + " (name, type, price, isVeg) VALUES (?, ?, ?, ?);"
+            );
+
+            addStatement.setString(1, getName());
+            addStatement.setInt(2, getType());
+            addStatement.setDouble(3, getUnitPrice());
+            addStatement.setBoolean(4, getIsVeg());
+
+            try {
+                addStatement.execute();
+            } catch (SQLException sex) {
+                sex.printStackTrace();
+            }
+
+            int idToSet = getIDfromDB(con);
+            setId(idToSet);
+
+            for (Recipe entry : this.recipe){
+
+                Recipe recipeEntry = new Recipe(getId(), entry.getIngredientID(), entry.getQty());
+                recipeEntry.addToDB(con);
+            }
+        }
+    }
+
     //Side effect: expects all pizzas have a recipe
     @Override
     public DBObject buildFromID(Connection connection, int id) throws SQLException {
@@ -180,7 +221,7 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
                             rs.getString("name"),
                             rs.getInt("type"),
                             rs.getDouble("price"),
-                            rs.getBoolean("isVeg")
+                            rs.getBoolean("getIsVeg")
                     );
                 }
             }
@@ -192,7 +233,7 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
 
                 //get IDs of all the recipe entries for this pizza
                 PreparedStatement query2 = connection.prepareStatement("SELECT rowid FROM " + recTable + " WHERE pizzaID == ? ;");
-                query2.setInt(1, toBuild.id);
+                query2.setInt(1, toBuild.getId());
 
                 try(ResultSet rs = query2.executeQuery()) {
                     ArrayList<Integer> IDs = new ArrayList<>();
@@ -215,41 +256,6 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
         return toBuild;
     }
 
-    @Override
-    public final String getTypeName() {
-        return "Pizza";
-    }
-
-    private boolean isVeg = false;
-
-    public static Pizza getGeneric(){ return new Pizza(); }
-
-    private Pizza(){
-        super();
-    }
-
-    public Pizza(String name) { super(name); }
-
-    private Pizza(int id, String name, double price, boolean isVeg){
-        super(name, price);
-        this.id = id;
-        this.isVeg = isVeg;
-    }
-
-    private Pizza(int id, String name, int type, double price, boolean isVeg){
-        super(name, type, price);
-        this.id = id;
-        this.isVeg = isVeg;
-    }
-
-    private Pizza(int id, String name){
-        super(name);
-        this.id = id;
-
-        determineIsVeg();
-        calculatePrice();
-    }
-
     private void determineIsVeg() {
         if(hasRecipe){
             boolean isVeg = true;
@@ -264,12 +270,12 @@ public class Pizza extends CompositeProduct implements FileLoadable<DBObject> {
                     e.printStackTrace();
                 }
 
-                if(ingToBuild != null && !ingToBuild.isVeg()) {
+                if(ingToBuild != null && !ingToBuild.getIsVeg()) {
                     isVeg = false;
                     break;
                 }
             }
-            this.isVeg = isVeg;
+            setIsVeg(isVeg);
         }
     }
 
