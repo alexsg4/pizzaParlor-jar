@@ -5,6 +5,7 @@ import com.alexandrustanciu.DB.DBObject;
 import com.alexandrustanciu.Orders.OrderSize;
 import com.alexandrustanciu.Products.Ingredient;
 import com.alexandrustanciu.Products.Pizza;
+import com.alexandrustanciu.UControls.ScreenController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,12 +35,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         Parent root = FXMLLoader.load(getClass().getResource(DIR_VIEW + "/FMain.fxml"));
         root.getStylesheets().add("/css/mainControls.css");
 
         primaryStage.setTitle(APP_TITLE);
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(400);
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
+
+        //TODO find and load all screens
+        ScreenController controller = ScreenController.getInstance();
+        controller.loadScreen("Ingredients", "../" + DIR_VIEW + "/FIngredients.fxml");
+        controller.setScreen("Ingredients");
 
     }
 
