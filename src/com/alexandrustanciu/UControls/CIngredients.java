@@ -18,16 +18,14 @@ import java.sql.SQLException;
 public class CIngredients extends ControlledScreen {
 
     @FXML
-    TableView ingTable;
+    private TableView ingTable;
     @FXML
-    Pane tablePane;
+    private Pane tablePane;
 
     private TableColumn<Ingredient, String> nameCol;
     private TableColumn<Ingredient, Double> priceCol;
     private TableColumn<Ingredient, Boolean> vegCol;
     private ObservableList<Ingredient> IngredientData;
-
-    public CIngredients(){ super(); }
 
     private void buildData(){
         IngredientData = FXCollections.observableArrayList();
