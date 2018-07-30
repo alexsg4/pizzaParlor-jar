@@ -23,11 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488">
-        <schema name="main" object-types="table, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="5c2f5f6c-2789-45bd-96bb-c6095cce8488">
@@ -41,13 +37,13 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/resources/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
-    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
     <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/test2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
+    <mapping file-url="file://$PROJECT_DIR$/sql/create2.sql" connection-id="5c2f5f6c-2789-45bd-96bb-c6095cce8488" session-id="MAIN" current-schema="main" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -75,7 +71,7 @@
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.2" />
+          <database-version value="3.21" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />

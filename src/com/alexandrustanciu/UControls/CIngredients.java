@@ -82,5 +82,6 @@ public class CIngredients extends ControlledScreen {
         ingTable.prefWidthProperty().bind(tablePane.prefWidthProperty());
         ingTable.prefHeightProperty().bind(tablePane.prefHeightProperty());
 
+
     }
 }

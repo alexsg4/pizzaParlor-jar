@@ -48,7 +48,6 @@ public class Main extends Application {
         //TODO find and load all screens
         ScreenController controller = ScreenController.getInstance();
         controller.loadScreen("Ingredients", "../" + DIR_VIEW + "/FIngredients.fxml");
-        controller.setScreen("Ingredients");
 
     }
 
