@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +20,7 @@ public class CIngredients extends ControlledScreen {
     @FXML
     private TableView ingTable;
     @FXML
-    private Pane tablePane;
+    private AnchorPane tablePane;
 
     private TableColumn<Ingredient, String> nameCol;
     private TableColumn<Ingredient, Double> priceCol;
@@ -79,9 +79,14 @@ public class CIngredients extends ControlledScreen {
         );
 
         ingTable.getColumns().addAll(nameCol, priceCol, vegCol);
-        ingTable.prefWidthProperty().bind(tablePane.prefWidthProperty());
-        ingTable.prefHeightProperty().bind(tablePane.prefHeightProperty());
 
+        //ingTable.prefWidthProperty().bind(tablePane.prefWidthProperty());
+        //ingTable.prefHeightProperty().bind(tablePane.prefHeightProperty());
+
+        AnchorPane.setTopAnchor(ingTable, 0d);
+        AnchorPane.setRightAnchor(ingTable, 0d);
+        AnchorPane.setBottomAnchor(ingTable, 0d);
+        AnchorPane.setLeftAnchor(ingTable, 0d);
 
     }
 }
