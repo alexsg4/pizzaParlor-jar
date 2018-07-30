@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="containerPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="com.alexandrustanciu.UControls.COverview">
+   <children>
+      <FlowPane fx:id="contentPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" vgap="10.0">
+         <children>
+            <Group>
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="120.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="41.0" prefWidth="75.0" text="99" textAlignment="CENTER">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="106.0" prefHeight="32.0" prefWidth="95.0" text="Sales Made">
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <FlowPane.margin>
+                  <Insets left="50.0" right="50.0" top="25.0" />
+               </FlowPane.margin>
+            </Group>
+            <Group layoutX="250.0" layoutY="35.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="120.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="41.0" prefWidth="75.0" text="99" textAlignment="CENTER">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="106.0" prefHeight="32.0" prefWidth="110.0" text="Net Earnings">
+                     <padding>
+                        <Insets top="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <FlowPane.margin>
+                  <Insets left="50.0" right="50.0" top="25.0" />
+               </FlowPane.margin>
+            </Group>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </FlowPane>
+   </children>
+</AnchorPane>
