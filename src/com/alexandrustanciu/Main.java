@@ -47,8 +47,11 @@ public class Main extends Application {
 
         //TODO find and load all screens
         ScreenController controller = ScreenController.getInstance();
-        controller.loadScreen("Ingredients", "../" + DIR_VIEW + "/FIngredients.fxml");
 
+        controller.loadScreen("Overview", "../" + DIR_VIEW + "/FOverview.fxml");
+        controller.loadScreen("Ingredients", "../" + DIR_VIEW + "/FIngredients.fxml");
+        controller.loadScreen("Menu", "../" + DIR_VIEW + "/FMenu.fxml");
+        controller.loadScreen("Orders", "../" + DIR_VIEW + "/FOrders.fxml");
     }
 
     private static void loadPizzaIngredients(DBManager manager){
