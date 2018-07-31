@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 
 public class CMain{
 
-    @FXML private Pane mainPanel;
+    @FXML private Pane mainPane;
     @FXML private Button btnOverview;
     @FXML private Button btnIngredients;
     @FXML private Button btnMenu;
@@ -21,10 +21,10 @@ public class CMain{
     public void initialize(){
 
         ScreenController controller = ScreenController.getInstance();
-        controller.prefWidthProperty().bind(mainPanel.widthProperty());
-        controller.prefHeightProperty().bind(mainPanel.heightProperty());
+        controller.prefWidthProperty().bind(mainPane.widthProperty());
+        controller.prefHeightProperty().bind(mainPane.heightProperty());
 
-        mainPanel.getChildren().add(controller);
+        mainPane.getChildren().add(controller);
 
         btnOverview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> controller.setScreen("Overview"));
         btnIngredients.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> controller.setScreen("Ingredients"));
