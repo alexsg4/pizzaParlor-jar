@@ -30,7 +30,7 @@ public class Order implements DBObject {
         return "Orders";
     }
 
-    static Order getGeneric(){ return new Order(); }
+    public static Order getGeneric(){ return new Order(); }
 
     //NOT USED HERE
     @Override

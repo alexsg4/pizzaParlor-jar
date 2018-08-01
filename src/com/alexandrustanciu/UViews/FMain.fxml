@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Rectangle2D?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alexandrustanciu.UControls.CMain">
    <children>
-      <GridPane id="sideBar" fx:id="navBar" minWidth="155.0" prefWidth="155.0" HBox.hgrow="NEVER">
+      <GridPane id="sideBar" fx:id="navBar" minWidth="156.0" prefWidth="156.0" HBox.hgrow="NEVER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -21,7 +21,7 @@
          <children>
             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="175.0" minWidth="60.0" prefHeight="110.0" prefWidth="155.0">
                <children>
-                  <ImageView fx:id="logoView" fitHeight="64.0" fitWidth="64.0" layoutX="46.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="logoView" blendMode="MULTIPLY" fitHeight="72.0" fitWidth="72.0" layoutX="42.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="39.0">
                      <image>
                         <Image url="@../../../../resources/png/053-pizza.png" />
                      </image>
@@ -31,10 +31,22 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <Button fx:id="btnOverview" alignment="CENTER" mnemonicParsing="false" styleClass="btnSidebar" text="Button" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Button fx:id="btnMenu" alignment="CENTER" layoutX="62.0" layoutY="163.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button fx:id="btnOrders" alignment="CENTER" layoutX="62.0" layoutY="163.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Button fx:id="btnInventory" alignment="CENTER" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Button fx:id="btnOverview" alignment="BASELINE_LEFT" mnemonicParsing="false" styleClass="btnSidebar" text="Button" textAlignment="JUSTIFY" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="25.0" />
+               </GridPane.margin></Button>
+            <Button fx:id="btnMenu" alignment="BASELINE_LEFT" layoutX="62.0" layoutY="163.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" textAlignment="JUSTIFY" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="25.0" />
+               </GridPane.margin></Button>
+            <Button fx:id="btnOrders" alignment="BASELINE_LEFT" layoutX="62.0" layoutY="163.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" textAlignment="JUSTIFY" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="25.0" />
+               </GridPane.margin></Button>
+            <Button fx:id="btnInventory" alignment="BASELINE_LEFT" layoutX="10.0" layoutY="73.0" mnemonicParsing="false" styleClass="btnSidebar" text="Button" textAlignment="JUSTIFY" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="25.0" />
+               </GridPane.margin></Button>
          </children>
       </GridPane>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">

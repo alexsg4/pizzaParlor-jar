@@ -51,9 +51,7 @@ public class CInventory extends ControlledScreen {
 
     }
 
-    @Override
-    public void initialize() {
-
+    void populate() {
         nameCol = new TableColumn<>();
         priceCol = new TableColumn<>();
         vegCol = new TableColumn<>();
@@ -79,9 +77,10 @@ public class CInventory extends ControlledScreen {
         );
 
         ingTable.getColumns().addAll(nameCol, priceCol, vegCol);
+    }
 
-        //ingTable.prefWidthProperty().bind(tablePane.prefWidthProperty());
-        //ingTable.prefHeightProperty().bind(tablePane.prefHeightProperty());
+    @Override
+    public void initialize() {
 
         AnchorPane.setTopAnchor(ingTable, 0d);
         AnchorPane.setRightAnchor(ingTable, 0d);

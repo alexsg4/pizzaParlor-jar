@@ -1,6 +1,5 @@
 package com.alexandrustanciu.UControls;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -11,19 +10,17 @@ import javafx.scene.layout.Pane;
 public class CMain{
 
     @FXML
-    private Pane mainPane;
+    Pane mainPane;
     @FXML
-    private Button btnOverview;
+    Button btnOverview;
     @FXML
-    private Button btnInventory;
+    Button btnInventory;
     @FXML
-    private Button btnMenu;
+    Button btnMenu;
     @FXML
-    private Button btnOrders;
+    Button btnOrders;
     @FXML
     private ImageView logoView;
-
-    public CMain(){ }
 
     @FXML
     public void initialize(){
@@ -39,6 +36,7 @@ public class CMain{
         btnOverview.setText("Overview");
         btnOverview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
             controller.setScreen("Overview");
+
         });
 
         btnMenu.setText("Menu");
