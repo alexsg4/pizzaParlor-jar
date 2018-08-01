@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="containerPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="com.alexandrustanciu.UControls.COverview">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="containerPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="com.alexandrustanciu.UControls.COverview">
    <children>
-      <FlowPane fx:id="contentPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" vgap="10.0">
+      <FlowPane fx:id="contentPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="400.0" prefWidth="600.0" styleClass="contentPane" vgap="10.0">
          <children>
             <Group>
                <children>

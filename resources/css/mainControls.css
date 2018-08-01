@@ -1,26 +1,23 @@
 *{
     -color-bg-main: white;
-    -color-bg-secondary: rgb(180, 180, 180);
+    -color-bg-secondary: rgba(0, 0, 0, 0.25);
+    -color-bg-tertiary: rgb(240, 240, 240);
     -color-accent: rgb(255, 151, 59);
 }
 
-#navBar{
+#actionBar{
     -fx-margin: 0;
     -fx-background-color: -color-bg-main;
     -fx-text-fill: black;
 }
 
-#mainPanel{
-    -fx-background-color: -color-bg-main;
-}
-
-#logoPanel{
-    -fx-background-color: -color-accent;
-    -fx-padding: 10;
+#sideBar{
     -fx-margin: 0;
+    -fx-background-color: -color-bg-main;
+    -fx-text-fill: black;
 }
 
-.btn_sidebar{
+.btnSidebar{
     -fx-margin: 0;
     -fx-font: 16px "Myriad Pro, Sans";
     -fx-font-weight: bold;
@@ -28,7 +25,21 @@
     -fx-text-fill: -color-bg-secondary;
 }
 
-.btn_sidebar:hover{
+.btnSidebar:focused{
     -fx-text-fill: black;
     -fx-font-weight:bolder;
+}
+
+.btnSidebar:hover{
+    -fx-text-fill: black;
+    -fx-font-weight:bolder;
+}
+
+#mainPane{
+    -fx-background-color: -color-bg-tertiary;
+}
+
+.contentPane{
+    -fx-margin: 0;
+    -fx-background-color: -color-bg-tertiary;
 }

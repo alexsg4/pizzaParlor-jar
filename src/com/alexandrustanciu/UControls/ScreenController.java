@@ -112,4 +112,7 @@ public class ScreenController extends StackPane {
         }
     }
 
+    public String getCurrentScreenId(){
+        return this.currentScreen;
+    }
 }

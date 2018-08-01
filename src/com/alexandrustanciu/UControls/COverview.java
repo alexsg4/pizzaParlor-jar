@@ -6,7 +6,6 @@ import javafx.scene.layout.FlowPane;
 
 public class COverview extends ControlledScreen {
 
-    @FXML private AnchorPane containerPane;
     @FXML private FlowPane contentPane;
 
     @Override

@@ -49,9 +49,13 @@ public class Main extends Application {
         ScreenController controller = ScreenController.getInstance();
 
         controller.loadScreen("Overview", "../" + DIR_VIEW + "/FOverview.fxml");
-        controller.loadScreen("Ingredients", "../" + DIR_VIEW + "/FIngredients.fxml");
-        controller.loadScreen("Menu", "../" + DIR_VIEW + "/FMenu.fxml");
-        controller.loadScreen("Orders", "../" + DIR_VIEW + "/FOrders.fxml");
+        controller.loadScreen("Inventory", "../" + DIR_VIEW + "/FInventory.fxml");
+
+        //TODO add layout and enable
+        //controller.loadScreen("Menu", "../" + DIR_VIEW + "/FMenu.fxml");
+        //controller.loadScreen("Orders", "../" + DIR_VIEW + "/FOrders.fxml");
+
+        controller.setScreen("Overview");
     }
 
     private static void loadPizzaIngredients(DBManager manager){

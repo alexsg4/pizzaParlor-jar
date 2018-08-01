@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CIngredients extends ControlledScreen {
+public class CInventory extends ControlledScreen {
 
     @FXML
     private TableView ingTable;
