@@ -19,10 +19,11 @@
 
 .btnSidebar{
     -fx-margin: 0;
-    -fx-font: 16px "Myriad Pro, Sans";
+    -fx-font-size: 16px;
+    -fx-font-family: 'Myriad Pro', sans;
     -fx-font-weight: bold;
-    -fx-background-color: -color-bg-main;
     -fx-text-fill: -color-bg-secondary;
+    -fx-background-color: -color-bg-main;
 }
 
 .btnSidebar:focused{
@@ -42,4 +43,28 @@
 .contentPane{
     -fx-margin: 0;
     -fx-background-color: -color-bg-tertiary;
+    -fx-effect: innershadow( gaussian , rgba(0,0,0,0.05) , 10,0,2,2 );
 }
+
+.widget{
+    -fx-margin: 0;
+    -fx-background-color: -color-bg-main;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.1) , 10,0,2,1 );
+}
+
+.widgetTitle{
+    -fx-font-size: 16px;
+    -fx-font-family: 'Myriad Pro', sans;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-accent;
+}
+
+.widgetInfoText{
+    -fx-margin: 30px;
+    -fx-font-size: 36px;
+    -fx-font-family: 'Myriad Pro', sans;
+    -fx-font-weight: 100;
+    -fx-text-fill: -color-accent;
+}
+
+
