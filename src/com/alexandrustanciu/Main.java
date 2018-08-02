@@ -57,6 +57,7 @@ public class Main extends Application {
             String screenFXMLPath = builder.toString();
 
             controller.loadScreen(screenID, screenFXMLPath);
+
         }
 
         //TODO add layouts for all screens

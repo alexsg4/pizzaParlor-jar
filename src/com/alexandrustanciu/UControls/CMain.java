@@ -36,7 +36,6 @@ public class CMain{
         btnOverview.setText(EScreens.OVER.toString());
         btnOverview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
             controller.setScreen(EScreens.OVER.toString());
-
         });
 
         btnMenu.setText(EScreens.MENU.toString());

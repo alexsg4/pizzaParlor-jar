@@ -2,6 +2,7 @@ package com.alexandrustanciu.UControls;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.Products.Ingredient;
+import com.alexandrustanciu.UEvents.SetScreenEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -23,7 +24,7 @@ import java.util.concurrent.Executors;
 public class CInventory extends ControlledScreen {
 
     @FXML private TableView ingTable;
-    @FXML private AnchorPane tablePane;
+    @FXML private AnchorPane contentPane;
 
     private InventoryDAO inventoryDAO;
     private Executor exec;
@@ -52,26 +53,9 @@ public class CInventory extends ControlledScreen {
         IngredientData = FXCollections.observableArrayList();
 
         buildTable();
-        populate();
-    }
+        //populate();
 
-    @FXML
-    private void populate() {
-        Task<List<Ingredient>> buildIngredientsTask = new Task<List<Ingredient>>() {
-            @Override
-            protected List<Ingredient> call() {
-                return inventoryDAO.buildData();
-            }
-        };
-
-        buildIngredientsTask.setOnFailed( e-> buildIngredientsTask.getException().printStackTrace());
-        buildIngredientsTask.setOnSucceeded( e->{
-            IngredientData.setAll(buildIngredientsTask.getValue());
-            ingTable.setItems(IngredientData);
-        });
-
-        exec.execute(buildIngredientsTask);
-
+        contentPane.addEventFilter(SetScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
     private void buildTable() {
@@ -98,6 +82,31 @@ public class CInventory extends ControlledScreen {
         );
 
         ingTable.getColumns().addAll(nameCol, priceCol, vegCol);
+
+    }
+    private void populate() {
+        Task<List<Ingredient>> buildIngredientsTask = new Task<List<Ingredient>>() {
+            @Override
+            protected List<Ingredient> call() {
+                //TODO test and remove
+                System.out.println("DBG: CInventory: buildIngredientsTask!!");
+                return inventoryDAO.buildData();
+            }
+        };
+
+        buildIngredientsTask.setOnFailed( e->{
+            Throwable ex = buildIngredientsTask.getException();
+            //ex.printStackTrace();
+            System.out.println(ex.getMessage());
+        });
+
+        buildIngredientsTask.setOnSucceeded( e->{
+            IngredientData.setAll(buildIngredientsTask.getValue());
+            ingTable.setItems(IngredientData);
+        });
+
+        exec.execute(buildIngredientsTask);
+
     }
 
 }

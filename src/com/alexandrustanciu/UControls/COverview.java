@@ -2,6 +2,7 @@ package com.alexandrustanciu.UControls;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.Orders.Order;
+import com.alexandrustanciu.UEvents.SetScreenEvent;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 
 public class COverview extends ControlledScreen {
 
+    @FXML private AnchorPane containerPane;
     @FXML private FlowPane contentPane;
     @FXML private BorderPane widgetSales;
     @FXML private Label titleSales;
@@ -49,13 +51,17 @@ public class COverview extends ControlledScreen {
            return t;
         });
 
-        populate();
+        //populate();
+
+        contentPane.getParent().addEventFilter(SetScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
     private void populate(){
        Task<String> getSalesDataTask = new Task<String>(){
            @Override
            public String call(){
+               //TODO test and remove
+               System.out.println("DBG: COverview: getSalesDATA!!");
                return salesDAO.getSalesData();
            }
        };
