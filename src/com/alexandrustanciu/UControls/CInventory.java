@@ -27,10 +27,6 @@ public class CInventory extends ControlledScreen {
 
     private InventoryDAO inventoryDAO;
     private Executor exec;
-
-    private TableColumn<Ingredient, String> nameCol;
-    private TableColumn<Ingredient, Double> priceCol;
-    private TableColumn<Ingredient, Boolean> vegCol;
     private ObservableList<Ingredient> IngredientData;
 
     @Override
@@ -59,6 +55,7 @@ public class CInventory extends ControlledScreen {
         populate();
     }
 
+    @FXML
     private void populate() {
         Task<List<Ingredient>> buildIngredientsTask = new Task<List<Ingredient>>() {
             @Override
@@ -78,9 +75,9 @@ public class CInventory extends ControlledScreen {
     }
 
     private void buildTable() {
-        nameCol = new TableColumn<>();
-        priceCol = new TableColumn<>();
-        vegCol = new TableColumn<>();
+        TableColumn<Ingredient, String> nameCol = new TableColumn<>();
+        TableColumn<Ingredient, Double> priceCol = new TableColumn<>();
+        TableColumn<Ingredient, Boolean> vegCol = new TableColumn<>();
 
         nameCol.setMinWidth(50);
         nameCol.setText("name");

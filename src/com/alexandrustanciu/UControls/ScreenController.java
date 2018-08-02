@@ -16,6 +16,7 @@ public class ScreenController extends StackPane {
 
     private static ScreenController instance = new ScreenController();
     private HashMap<String, Node> loadedScreens = new HashMap<>();
+
     private String currentScreen;
 
     private ScreenController(){
@@ -35,9 +36,6 @@ public class ScreenController extends StackPane {
         try {
             FXMLLoader myLoader = new FXMLLoader(getClass().getResource(resource));
 
-            //TODO remove
-            System.out.println("DBG: " + getClass().getResource(resource));
-
             Parent screenToLoad = myLoader.load();
             ControlledScreen myScreenController = myLoader.getController();
             myScreenController.setScreenParent(this);
@@ -53,6 +51,10 @@ public class ScreenController extends StackPane {
     //Returns the Node with the appropriate name
     public Node getScreen(String name) {
         return loadedScreens.get(name);
+    }
+
+    public Node getScreen(Screens name) {
+        return loadedScreens.get(name.toString());
     }
 
     //This method tries to displayed the screen with a predefined name.
@@ -97,6 +99,10 @@ public class ScreenController extends StackPane {
 
     }
 
+    public boolean setScreen(Screens screen){
+        return setScreen(screen.toString());
+    }
+
     //This method will remove the screen with the given name from the collection of loadedScreens
     public boolean unloadScreen(String name) {
         if (loadedScreens.remove(name) == null) {
@@ -107,7 +113,16 @@ public class ScreenController extends StackPane {
         }
     }
 
+    //This method will remove the screen with the given name from the collection of loadedScreens
+    public boolean unloadScreen(Screens screens) {
+        return unloadScreen(screens.toString());
+    }
+
     public String getCurrentScreenId(){
         return this.currentScreen;
+    }
+
+    public Node getCurrentScreen(){
+        return getScreen(this.currentScreen);
     }
 }

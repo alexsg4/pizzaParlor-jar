@@ -6,6 +6,7 @@ import com.alexandrustanciu.Orders.OrderSize;
 import com.alexandrustanciu.Products.Ingredient;
 import com.alexandrustanciu.Products.Pizza;
 import com.alexandrustanciu.UControls.ScreenController;
+import com.alexandrustanciu.UControls.Screens;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -47,15 +48,20 @@ public class Main extends Application {
 
         //TODO find and load all screens
         ScreenController controller = ScreenController.getInstance();
+        for(Screens s : Screens.values()){
+            String screenID = s.toString();
 
-        controller.loadScreen("Overview", "../" + DIR_VIEW + "/FOverview.fxml");
-        controller.loadScreen("Inventory", "../" + DIR_VIEW + "/FInventory.fxml");
+            StringBuilder builder = new StringBuilder(screenID);
+            builder.insert(0, "../" + DIR_VIEW + "/F");
+            builder.append(".fxml");
+            String screenFXMLPath = builder.toString();
 
-        //TODO add layout and enable
-        //controller.loadScreen("Menu", "../" + DIR_VIEW + "/FMenu.fxml");
-        //controller.loadScreen("Orders", "../" + DIR_VIEW + "/FOrders.fxml");
+            controller.loadScreen(screenID, screenFXMLPath);
+        }
 
-        controller.setScreen("Overview");
+        //TODO add layouts for all screens
+
+        controller.setScreen(Screens.OVER);
     }
 
     private static void loadPizzaIngredients(DBManager manager){
