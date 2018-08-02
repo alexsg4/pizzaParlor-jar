@@ -53,7 +53,7 @@ public class ScreenController extends StackPane {
         return loadedScreens.get(name);
     }
 
-    public Node getScreen(Screens name) {
+    public Node getScreen(EScreens name) {
         return loadedScreens.get(name.toString());
     }
 
@@ -99,7 +99,7 @@ public class ScreenController extends StackPane {
 
     }
 
-    public boolean setScreen(Screens screen){
+    public boolean setScreen(EScreens screen){
         return setScreen(screen.toString());
     }
 
@@ -114,8 +114,8 @@ public class ScreenController extends StackPane {
     }
 
     //This method will remove the screen with the given name from the collection of loadedScreens
-    public boolean unloadScreen(Screens screens) {
-        return unloadScreen(screens.toString());
+    public boolean unloadScreen(EScreens screen) {
+        return unloadScreen(screen.toString());
     }
 
     public String getCurrentScreenId(){

@@ -1,6 +1,6 @@
 package com.alexandrustanciu.UControls;
 
-public enum Screens {
+public enum EScreens {
     OVER ("Overview"),
     INVT ("Inventory"),
     ORDR ("Orders"),
@@ -8,7 +8,7 @@ public enum Screens {
 
     private final String name;
 
-    Screens(String s){
+    EScreens(String s){
         name = s;
     }
 

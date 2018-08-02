@@ -5,8 +5,8 @@ import com.alexandrustanciu.DB.DBObject;
 import com.alexandrustanciu.Orders.OrderSize;
 import com.alexandrustanciu.Products.Ingredient;
 import com.alexandrustanciu.Products.Pizza;
+import com.alexandrustanciu.UControls.EScreens;
 import com.alexandrustanciu.UControls.ScreenController;
-import com.alexandrustanciu.UControls.Screens;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,7 +48,7 @@ public class Main extends Application {
 
         //TODO find and load all screens
         ScreenController controller = ScreenController.getInstance();
-        for(Screens s : Screens.values()){
+        for(EScreens s : EScreens.values()){
             String screenID = s.toString();
 
             StringBuilder builder = new StringBuilder(screenID);
@@ -61,7 +61,7 @@ public class Main extends Application {
 
         //TODO add layouts for all screens
 
-        controller.setScreen(Screens.OVER);
+        controller.setScreen(EScreens.OVER);
     }
 
     private static void loadPizzaIngredients(DBManager manager){

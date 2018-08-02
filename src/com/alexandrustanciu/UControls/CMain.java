@@ -33,25 +33,25 @@ public class CMain{
         logoView.setImage(new Image("/png/053-pizza.png"));
 
         //TODO update screens after setting them
-        btnOverview.setText(Screens.OVER.toString());
+        btnOverview.setText(EScreens.OVER.toString());
         btnOverview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
-            controller.setScreen(Screens.OVER.toString());
+            controller.setScreen(EScreens.OVER.toString());
 
         });
 
-        btnMenu.setText(Screens.MENU.toString());
+        btnMenu.setText(EScreens.MENU.toString());
         btnMenu.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
-            controller.setScreen(Screens.MENU.toString());
+            controller.setScreen(EScreens.MENU.toString());
         });
 
-        btnOrders.setText(Screens.ORDR.toString());
+        btnOrders.setText(EScreens.ORDR.toString());
         btnOrders.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
-            controller.setScreen(Screens.ORDR.toString());
+            controller.setScreen(EScreens.ORDR.toString());
         });
 
-        btnInventory.setText(Screens.INVT.toString());
+        btnInventory.setText(EScreens.INVT.toString());
         btnInventory.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->{
-            controller.setScreen(Screens.INVT.toString());
+            controller.setScreen(EScreens.INVT.toString());
         });
     }
 
