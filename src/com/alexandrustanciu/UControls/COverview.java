@@ -66,8 +66,6 @@ public class COverview extends ControlledScreen {
        });
 
        getSalesDataTask.setOnSucceeded(e -> {
-           //TODO remove
-           System.out.println("DBG: "+getSalesDataTask.getValue());
            textSalesNumber.setText(getSalesDataTask.getValue());
         });
 
