@@ -55,6 +55,7 @@ public class CInventory extends ControlledScreen {
         buildTable();
 
         contentPane.addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
+
     }
 
     private void buildTable() {
@@ -62,7 +63,7 @@ public class CInventory extends ControlledScreen {
         TableColumn<Ingredient, Double> priceCol = new TableColumn<>();
         TableColumn<Ingredient, Boolean> vegCol = new TableColumn<>();
 
-        nameCol.setMinWidth(50);
+        nameCol.setMinWidth(150);
         nameCol.setText("name");
         nameCol.setCellValueFactory(
                 new PropertyValueFactory<Ingredient, String>("name")
@@ -80,9 +81,11 @@ public class CInventory extends ControlledScreen {
                 new PropertyValueFactory<Ingredient, Boolean>("isVeg")
         );
 
+        ingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         ingTable.getColumns().addAll(nameCol, priceCol, vegCol);
 
     }
+
     private void populate() {
         Task<List<Ingredient>> buildIngredientsTask = new Task<List<Ingredient>>() {
             @Override
