@@ -2,7 +2,7 @@ package com.alexandrustanciu.UControls;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.Products.Ingredient;
-import com.alexandrustanciu.UEvents.SetScreenEvent;
+import com.alexandrustanciu.UEvents.ScreenEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -55,7 +55,7 @@ public class CInventory extends ControlledScreen {
         buildTable();
         //populate();
 
-        contentPane.addEventFilter(SetScreenEvent.ON_SET_SCREEN, e -> populate());
+        contentPane.addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
     private void buildTable() {

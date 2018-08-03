@@ -2,7 +2,7 @@ package com.alexandrustanciu.UControls;
 
 import com.alexandrustanciu.DB.DBManager;
 import com.alexandrustanciu.Orders.Order;
-import com.alexandrustanciu.UEvents.SetScreenEvent;
+import com.alexandrustanciu.UEvents.ScreenEvent;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -53,7 +53,7 @@ public class COverview extends ControlledScreen {
 
         //populate();
 
-        contentPane.getParent().addEventFilter(SetScreenEvent.ON_SET_SCREEN, e -> populate());
+        contentPane.getParent().addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
     private void populate(){

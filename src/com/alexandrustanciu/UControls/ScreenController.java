@@ -1,6 +1,6 @@
 package com.alexandrustanciu.UControls;
 
-import com.alexandrustanciu.UEvents.SetScreenEvent;
+import com.alexandrustanciu.UEvents.ScreenEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -92,7 +92,7 @@ public class ScreenController extends StackPane {
             }
             System.out.println("ScreenController set screen: " + name);
             currentScreen = name;
-            loadedScreens.get(name).fireEvent(SetScreenEvent.ON_SET);
+            loadedScreens.get(name).fireEvent(ScreenEvent.ON_SET);
             return true;
         } else {
             System.out.println("screen hasn't been loaded!!! \n");
