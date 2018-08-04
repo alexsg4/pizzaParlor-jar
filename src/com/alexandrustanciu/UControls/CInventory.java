@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,6 +27,8 @@ public class CInventory extends ControlledScreen {
 
     @FXML private TableView ingTable;
     @FXML private FlowPane contentPane;
+    @FXML private Label textTitle;
+
 
     private InventoryDAO inventoryDAO;
     private Executor exec;
@@ -51,6 +54,7 @@ public class CInventory extends ControlledScreen {
             e.printStackTrace();
         }
 
+        textTitle.setText("Ingredient list");
         IngredientData = FXCollections.observableArrayList();
 
         buildTable();
