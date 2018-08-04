@@ -24,3 +24,6 @@ hs_err_pid*
 
 # IDEA out directory
 /out
+
+# IDEA plugin config
+/.idea/dbnavigator.xml
