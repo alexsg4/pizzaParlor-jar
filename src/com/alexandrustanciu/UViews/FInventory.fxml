@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -10,6 +11,9 @@
          <center>
             <TableView fx:id="ingTable" prefHeight="302.0" prefWidth="550.0" />
          </center>
+         <top>
+            <Label fx:id="textTitle" alignment="TOP_LEFT" styleClass="widgetTitle" text="Label" BorderPane.alignment="CENTER" />
+         </top>
       </BorderPane>
    </children>
    <padding>
