@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +25,7 @@ import java.util.concurrent.Executors;
 public class CInventory extends ControlledScreen {
 
     @FXML private TableView ingTable;
-    @FXML private AnchorPane contentPane;
+    @FXML private FlowPane contentPane;
 
     private InventoryDAO inventoryDAO;
     private Executor exec;
@@ -33,10 +34,10 @@ public class CInventory extends ControlledScreen {
     @Override
     public void initialize() {
 
-        AnchorPane.setTopAnchor(ingTable, 0d);
-        AnchorPane.setRightAnchor(ingTable, 0d);
-        AnchorPane.setBottomAnchor(ingTable, 0d);
-        AnchorPane.setLeftAnchor(ingTable, 0d);
+        AnchorPane.setTopAnchor(contentPane, 0d);
+        AnchorPane.setRightAnchor(contentPane, 0d);
+        AnchorPane.setBottomAnchor(contentPane, 0d);
+        AnchorPane.setLeftAnchor(contentPane, 0d);
 
         exec= Executors.newCachedThreadPool(runnable -> {
            Thread t = new Thread(runnable);

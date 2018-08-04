@@ -19,7 +19,6 @@ import java.util.concurrent.Executors;
 
 public class COverview extends ControlledScreen {
 
-    @FXML private AnchorPane containerPane;
     @FXML private FlowPane contentPane;
     @FXML private BorderPane widgetSales;
     @FXML private Label titleSales;
@@ -53,7 +52,7 @@ public class COverview extends ControlledScreen {
 
         //populate();
 
-        contentPane.getParent().addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
+        contentPane.addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
     private void populate(){
