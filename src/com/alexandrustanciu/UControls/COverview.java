@@ -22,7 +22,7 @@ public class COverview extends ControlledScreen {
     @FXML private FlowPane contentPane;
     @FXML private BorderPane widgetSales;
     @FXML private Label titleSales;
-    @FXML private Label textSalesNumber;
+    @FXML private Label textSalesNumber, textEarnings;
 
     private Executor exec;
     private SalesDAO salesDAO;
@@ -50,8 +50,6 @@ public class COverview extends ControlledScreen {
            return t;
         });
 
-        //populate();
-
         contentPane.addEventFilter(ScreenEvent.ON_SET_SCREEN, e -> populate());
     }
 
@@ -65,17 +63,35 @@ public class COverview extends ControlledScreen {
            }
        };
 
+       Task<String> getEarningsTask = new Task<String>(){
+            @Override
+            public String call(){
+                //TODO test and remove
+                System.out.println("DBG: COverview: getEarningsTask!!");
+                return salesDAO.getEarnings();
+            }
+       };
+
+
        getSalesDataTask.setOnFailed(e->{
            //getSalesDataTask.getException().printStackTrace();
            System.out.println(getSalesDataTask.getException().getMessage());
        });
-
        getSalesDataTask.setOnSucceeded(e -> {
            textSalesNumber.setText(getSalesDataTask.getValue());
         });
 
+       getEarningsTask.setOnFailed(e->{
+            //getSalesDataTask.getException().printStackTrace();
+            System.out.println(getEarningsTask.getException().getMessage());
+        });
+       getEarningsTask.setOnSucceeded(e-> textEarnings.setText(getEarningsTask.getValue()) );
+
+       exec.execute(getEarningsTask);
        exec.execute(getSalesDataTask);
+
     }
+
 }
 
 class SalesDAO{
@@ -105,4 +121,31 @@ class SalesDAO{
         }
         return toReturn;
     }
+
+    String getEarnings(){
+
+        double sum = 0d;
+        String toReturn = "null";
+
+        try{
+            String table = Order.getGeneric().getTable();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT SUM(value) FROM " + table
+            );
+
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                sum = rs.getDouble(1);
+                toReturn = "$ " + Double.toString(sum);
+            }
+
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+
+    return  toReturn;
+
+    }
+
 }

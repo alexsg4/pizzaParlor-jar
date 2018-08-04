@@ -47,12 +47,14 @@
 }
 
 .widget{
+    -fx-padding: 5px;
     -fx-margin: 0;
     -fx-background-color: -color-bg-main;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.1) , 10,0,2,1 );
 }
 
 .widgetTitle{
+    -fx-label-padding: 5px;
     -fx-font-size: 16px;
     -fx-font-family: 'Myriad Pro', sans;
     -fx-font-weight: bold;
@@ -60,11 +62,19 @@
 }
 
 .widgetInfoText{
-    -fx-margin: 30px;
+    -fx-label-padding: 10px;
     -fx-font-size: 36px;
     -fx-font-family: 'Myriad Pro', sans;
     -fx-font-weight: 100;
     -fx-text-fill: -color-accent;
+}
+
+.widgetInfoTextLarge{
+    -fx-label-padding: 10px;
+    -fx-font-size: 24px;
+    -fx-font-family: 'Myriad Pro', sans;
+    -fx-font-weight: 100, light;
+    -fx-text-fill: black;
 }
 
 

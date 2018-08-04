@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <FlowPane xmlns:fx="http://javafx.com/fxml/1" fx:id="contentPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="10.0" prefHeight="200.0" prefWidth="200.0" styleClass="contentPane" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="com.alexandrustanciu.UControls.CInventory">
    <children>
-      <BorderPane prefHeight="232.0" prefWidth="351.0">
+      <BorderPane prefHeight="232.0" prefWidth="351.0" styleClass="widget">
          <center>
             <TableView fx:id="ingTable" prefHeight="302.0" prefWidth="550.0" />
          </center>

@@ -12,12 +12,18 @@
          <top>
             <Label fx:id="titleSales" styleClass="widgetTitle" text="Label" BorderPane.alignment="CENTER_LEFT">
                <BorderPane.margin>
-                  <Insets left="10.0" top="5.0" />
+                  <Insets />
                </BorderPane.margin>
             </Label>
          </top>
+         <bottom>
+            <Label fx:id="textEarnings" styleClass="widgetInfoText" text="Label" BorderPane.alignment="BOTTOM_RIGHT">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin></Label>
+         </bottom>
          <center>
-            <Label fx:id="textSalesNumber" styleClass="widgetInfoText" text="Label" BorderPane.alignment="BOTTOM_RIGHT" />
+            <Label fx:id="textSalesNumber" styleClass="widgetInfoTextLarge" text="Label" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>
